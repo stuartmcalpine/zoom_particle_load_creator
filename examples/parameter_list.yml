@@ -1,0 +1,68 @@
+# Description of the possible parameters.
+#
+# Example parameters here are for the 100 Mpc EAGLE box.
+# ------------------------------------------------------
+
+# Required parameters
+# -------------------
+
+# Size of the simulation box in Mpc/h
+box_size : 67.77
+
+# Total number of particles in the simulation (if DMO).
+# There must be an integer cube root of this number.
+n_particles: 3402072064
+
+# Which glass file to use.  Param is the number of particles in the glass file,
+# the smaller the number the more refined your high-resolution region will be
+# (but will take longer to make). Needs matching number in ./glass_files dir.
+glass_num: 103823
+
+# File name of the output mask.
+f_name: eagle_100
+
+# Panphasian descriptor for ic_gen
+panphasian_descriptor: " [Panph1,L16,(31250,23438,39063),S12,CH1050187043,EAGLE_L0100_VOL1]"
+
+# Starting level in the Panphasia descriptor (number after the S)
+ndim_fft_start: 12
+
+# Is this a zoom simulation?
+is_zoom: False
+
+# Cosmology parameters.
+Omega0: 0.307
+OmegaCDM: 0.2587481
+OmegaLambda: 0.693
+OmegaBaryon: 0.0482519
+HubbleParam: 0.6777
+Sigma8: 0.8288
+
+# Filename of the linear power spectrum for icgen.
+linear_ps: "extended_planck_linear_powspec"
+
+# Softening rules to use.
+softening_rules: "eagle"
+
+# Optional parameters
+# The parameters shown are the defaults
+# -------------------------------------
+
+# Want the skin high-res cells to also be glass cells?
+# If not, uniform grids are used instead.
+grid_also_glass: True
+
+# Where are the glass files?
+glass_files_dir: "./glass_files/"
+
+# How many glass cells to put on either side of the loaded mask (for a buffer)
+glass_buffer_cells: 2
+
+# Path to the HDF5 mask file to use.
+mask_file: /path/to/mask.hdf5
+
+# Minimum allowed value of nq
+min_nq: 20
+
+# Maximum allowed value of nq
+_max_nq: 1000

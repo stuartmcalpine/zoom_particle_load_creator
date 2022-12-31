@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools >= 60", "Cython"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "particle_load"
+description = "Make particles loads for Virgo Consortium zoom-in simulations"
+license = {text = "BSD 3-Clause License"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD 3-Clause License",
+]
+dependencies = [
+    "numpy",
+    "h5py",
+    "pyaml",
+    "mpi4py",
+    "astropy",
+    "matplotlib"
+]
+requires-python = ">=3.8,<3.11"
+version = "0.0.1"
+readme = "README.md"
+authors = [
+  { name="Stuart McAlpine", email="stuart.mcalpine@fysik.su.se" },
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]  # list of folders that contain the packages (["."] by default)
+
+[tool.local.cythonize]
+# This attr can contain multiple globs
+src = ["src/**/*.pyx"]
+
+#[tool.local.cythonize.env]
+# Env vars provisioned during cythonize call
+#ANSIBLE_PYLIBSSH_TRACING = "1"
+#CFLAGS = "-DCYTHON_TRACE=1 ${CFLAGS}"
+#LDFLAGS = "-lssh ${LDFLAGS}"
+
+[tool.local.cythonize.flags]
+# This section can contain the following booleans:
+# * annotate — generate annotated HTML page for source files
+# * build — build extension modules using distutils
+# * inplace — build extension modules in place using distutils (implies -b)
+# * force — force recompilation
+# * quiet — be less verbose during compilation
+# * lenient — increase Python compat by ignoring some compile time errors
+# * keep-going — compile as much as possible, ignore compilation failures
+annotate = false
+build = false
+inplace = true
+force = true
+quiet = false
+lenient = false
+keep-going = false
