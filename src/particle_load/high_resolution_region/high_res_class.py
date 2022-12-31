@@ -9,9 +9,8 @@ from mpi4py import MPI
 from .nearest import find_nearest_glass_file, find_nearest_cube
 from .plot import plot_high_res_region
 
-class HighResolutionRegion:
-    """Generate cell structure for high-resolution grid."""
 
+class HighResolutionRegion:
     def __init__(self, pl_params, plot=False):
         """
         Class that stores the information about the high-res grid generated
@@ -42,8 +41,8 @@ class HighResolutionRegion:
             Cell type of the cells in the high-res grid
         cell_info : dict
             For each cell type, stores the information for that type
-            (ie particle mass going into them, num particles etc). 
-        
+            (ie particle mass going into them, num particles etc).
+
         """
 
         # Compute dimensions of the high-res region (in units of glass cells).
@@ -65,7 +64,7 @@ class HighResolutionRegion:
         bounding box of the loaded mask as a cubic grid.
 
         This then dictates the size of our high-res grid in Mpc/h and glass
-        cell units. 
+        cell units.
 
         Parameters
         ----------
@@ -147,12 +146,12 @@ class HighResolutionRegion:
         Generate the positions of each cell in the high-res region grid.
 
         Cells are split between cores in MPI.
-        
+
         Parameters
         ----------
         pl_params : ParticleLoadParams
             Stores the parameters of the run
-        
+
         Returns
         -------
         offsets : ndarray
@@ -210,7 +209,7 @@ class HighResolutionRegion:
         this routine. 0 is a target resolution glass cell, which has already been
         filled in by the "get_assign_mask_cells" function earlier. Numbers greater than
         0, which we assign here, will be increasingly lower resolution.
-        
+
         This routine fills the cell_types array in place.
 
         Parameters
@@ -277,7 +276,7 @@ class HighResolutionRegion:
     def _count_high_res_particles(self, pl_params):
         """
         Count total number of high-resolution particles there will be.
-        
+
         Parameters
         ----------
         pl_params : ParticleLoadParams
@@ -388,7 +387,7 @@ class HighResolutionRegion:
     def _init_high_res_region(self, pl_params):
         """
         Make the high resolution grid.
-        
+
         First it populates the cell_types array with the glass cells, using the
         HDF5 mask file. Then it populates the remaining cells in the high-res
         grid with steadily decreasing glass cells of lower resolution going

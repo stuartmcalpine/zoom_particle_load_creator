@@ -1,4 +1,8 @@
-from fortran_functions import read_fortran_glass_file, write_fortran_glass_file, read_ascii_glass_file
+from fortran_functions import (
+    read_fortran_glass_file,
+    write_fortran_glass_file,
+    read_ascii_glass_file,
+)
 import numpy as np
 import sys
 import os

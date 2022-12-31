@@ -15,13 +15,13 @@ for fname in fnames:
         coords = read_fortran_glass_file(fname, 1)
     else:
         raise ValueError("Bad fname")
-    
+
     # Plot particles.
-    plt.figure(figsize=(5,5))
+    plt.figure(figsize=(5, 5))
     plt.title(fname)
-    plt.scatter(coords[:,0], coords[:,1], s=1, marker='.')
+    plt.scatter(coords[:, 0], coords[:, 1], s=1, marker=".")
     plt.xlim(0, 1)
-    plt.ylim(0,1)
+    plt.ylim(0, 1)
     plt.tight_layout(pad=0.1)
     plt.savefig(f"./plots/{fname}.png")
     plt.close()

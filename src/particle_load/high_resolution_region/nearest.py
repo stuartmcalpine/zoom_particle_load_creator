@@ -1,10 +1,11 @@
 import numpy as np
 import os
 
+
 def find_nearest_glass_file(num, glass_files_dir):
     """
     Find glass file that has the closest number of particles to <num>.
-    
+
     Parameters
     ----------
     num : int
@@ -26,17 +27,18 @@ def find_nearest_glass_file(num, glass_files_dir):
 
     return files[idx]
 
+
 def find_nearest_cube(num):
     """
     Find the nearest number to <num> that has a cube root.
-    
+
     Need our "grid" cells to be cube roots.
 
     Parameters
     ----------
     num : int
         Number of particles we want to find the closest match for
-    
+
     Returns
     -------
         Closest number to <num> that has a cube root

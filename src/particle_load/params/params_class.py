@@ -7,11 +7,10 @@ from particle_load.params import compute_masses, compute_softening
 
 
 class ZoomRegionMask:
-
     def __init__(self, mask_file):
         """
         Load the high-resolution region mask file.
-    
+
         Parameters
         ----------
         mask_file : string
@@ -44,7 +43,6 @@ class ZoomRegionMask:
 
 
 class ParticleLoadParams:
-
     def __init__(self, args):
         """
         Stores the parameter file entries.
@@ -54,9 +52,9 @@ class ParticleLoadParams:
 
         For a full list of parameter options and to see their description, see
         ./examples/parameter_list.yml.
-       
+
         Each parameter from the parameter file (or defaults) is stored with the
-        same name in this class, e.g., X.box_size or X.swift_dir. 
+        same name in this class, e.g., X.box_size or X.swift_dir.
 
         Parameters
         ----------
@@ -80,7 +78,7 @@ class ParticleLoadParams:
             "HubbleParam",
             "Sigma8",
             "linear_ps",
-            "softening_rules"
+            "softening_rules",
         ]
 
         # These **cannot** be in param file, they are command line args.
@@ -115,7 +113,7 @@ class ParticleLoadParams:
             self._load_high_res_region_mask()
 
     def _load_high_res_region_mask(self):
-        """ Load the mask HDF5 file. """
+        """Load the mask HDF5 file."""
 
         self.high_res_region_mask = ZoomRegionMask(self.mask_file)
 
@@ -217,37 +215,37 @@ class ParticleLoadParams:
 
         self._add_default_value("coords", np.array([0.0, 0.0, 0.0]))
         self._add_default_value("radius", 0.0)
-        self._add_default_value("mask_file", None)
+        # self._add_default_value("mask_file", None)
         self._add_default_value("n_species", 1)
         self._add_default_value("num_constraint_files", 0)
-        self._add_default_value("nq_mass_reduce_factor", 1 / 2.0)
-        self._add_default_value("skin_reduce_factor", 1 / 8.0)
-        self._add_default_value("min_num_per_cell", 8)
+        # self._add_default_value("nq_mass_reduce_factor", 1 / 2.0)
+        # self._add_default_value("skin_reduce_factor", 1 / 8.0)
+        # self._add_default_value("min_num_per_cell", 8)
         self._add_default_value("radius_factor", 1.0)
-        self._add_default_value("glass_buffer_cells", 2)
-        self._add_default_value("ic_region_buffer_frac", 1.0)
+        # self._add_default_value("glass_buffer_cells", 2)
+        # self._add_default_value("ic_region_buffer_frac", 1.0)
         self._add_default_value("starting_z", 127.0)
         self._add_default_value("finishing_z", 0.0)
-        self._add_default_value("nmaxpart", 36045928)
-        self._add_default_value("nmaxdisp", 791048437)
-        self._add_default_value("mem_per_core", 18.2e9)
-        self._add_default_value("max_particles_per_ic_file", 400**3)
+        # self._add_default_value("nmaxpart", 36045928)
+        # self._add_default_value("nmaxdisp", 791048437)
+        # self._add_default_value("mem_per_core", 18.2e9)
+        # self._add_default_value("max_particles_per_ic_file", 400**3)
         self._add_default_value("use_ph_ids", True)
         self._add_default_value("nbit", 21)
-        self._add_default_value("fft_times_fac", 2.0)
-        self._add_default_value("multigrid_ics", False)
-        self._add_default_value("min_nq", 20)
-        self._add_default_value("_max_nq", 1000)
+        # self._add_default_value("fft_times_fac", 2.0)
+        # self._add_default_value("multigrid_ics", False)
+        # self._add_default_value("min_nq", 20)
+        # self._add_default_value("_max_nq", 1000)
         self._add_default_value("is_slab", False)
-        self._add_default_value("grid_also_glass", True)
-        self._add_default_value("glass_files_dir", "./glass_files/")
+        # self._add_default_value("grid_also_glass", True)
+        # self._add_default_value("glass_files_dir", "./glass_files/")
         self._add_default_value("softening_ratio_background", 0.02)
-        self._add_default_value("ncores_node", 28)
+        # self._add_default_value("ncores_node", 28)
         self._add_default_value("n_nodes_swift", 1)
         self._add_default_value("num_hours_swift", 10)
         self._add_default_value("swift_exec_location", ".")
         self._add_default_value("num_hours_ic_gen", 10)
-        self._add_default_value("n_cores_ic_gen", 10)
+        self._add_default_value("n_cores_ic_gen", None)
         self._add_default_value("verbose", True)
         self._add_default_value("high_res_L", 0.0)
         self._add_default_value("high_res_n_eff", 0)

@@ -3,6 +3,7 @@
 # Example parameters here are for the 100 Mpc EAGLE box.
 # ------------------------------------------------------
 
+# -------------------
 # Required parameters
 # -------------------
 
@@ -44,9 +45,10 @@ linear_ps: "extended_planck_linear_powspec"
 # Softening rules to use.
 softening_rules: "eagle"
 
-# Optional parameters
+# -----------------------------------------------
+# Optional parameters (relating to high-res grid)
 # The parameters shown are the defaults
-# -------------------------------------
+# -----------------------------------------------
 
 # Want the skin high-res cells to also be glass cells?
 # If not, uniform grids are used instead.
@@ -61,8 +63,67 @@ glass_buffer_cells: 2
 # Path to the HDF5 mask file to use.
 mask_file: /path/to/mask.hdf5
 
+# How much to reduce the resolution of the particles when moving away from the
+# target resolution glass particles in the high-res grid.
+skin_reduce_factor: 0.125 # 1 / 8.
+
+# Minimum number of particles per cell in high-res grid.
+# Must have cube root.
+min_num_per_cell: 8
+
+
+
+# -----------------------------------------------
+# Optional parameters (relating to low-res skins)
+# The parameters shown are the defaults
+# -----------------------------------------------
+
 # Minimum allowed value of nq
 min_nq: 20
 
 # Maximum allowed value of nq
-_max_nq: 1000
+_max_nq: 1000   
+
+# How much lower mass (approx) do we want the first low-res skin to be relative
+# to the lowest mass high-res grid particles. The smaller the number, the
+# bigger the jump between masses from the low-res grid to the first skin. Need
+# a balance between reducing the number of particles (i.e., lower values of
+# this param), and not having too big a jump in mass between particles beside
+# each other (keeping the number closer to 1).
+nq_mass_reduce_factor: 0.125 # 1 / 8.
+
+# ----------------------------------------
+# Optional parameters (relating to ic_gen)
+# The parameters shown are the defaults
+# ----------------------------------------
+
+# Pretend the size of the high-res grid is bigger by this factor.This is if
+# you want a bit of protection in the accuracy of this FFT grid over the zoom
+# region. Not sure if it makes a difference.
+ic_region_buffer_frac: 1.0
+
+# How big do we want the FFT grid to be in relation to the mean interparticle
+# seperation at the desired resolution. This is usually a factor of two, that
+# is, the FFT grid has to be at least a factor of two smaller than the mean
+# inter-particle separation.
+fft_times_fac: 2.0
+
+# How many cores per node
+ncores_node: 28 # Cosma7
+
+# How much memory is there per core on the machine (in bytes)
+mem_per_core: 18.2e9 # Cosma7
+
+# These are the values you have coded into ic_gen
+nmaxpart: 36045928
+nmaxdisp: 791048437
+
+# Turn on multigrid ICs for ic_gen
+multigrid_ics: False
+
+# ic_gen doesn't like to many particles per fortran file part.
+# This is the max allowed number of particles per file.
+# You have to choose the right number of cores to make this possible.
+max_particles_per_ic_file: 400**3
+
+

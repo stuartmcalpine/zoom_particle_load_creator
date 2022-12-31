@@ -4,7 +4,7 @@ import h5py
 import numpy as np
 from scipy.io import FortranFile
 
-import mympi
+import particle_load.mympi as mympi
 from particle_load.parallel_functions import repartition
 
 

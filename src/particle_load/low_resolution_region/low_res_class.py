@@ -1,38 +1,87 @@
 import numpy as np
 
 import particle_load.mympi as mympi
-from particle_load.MakeGrid import get_guess_nq
+
+from .find_nq import find_nq
+from .plot import plot_skins
 
 
 class LowResolutionRegion:
-    """Layered skin structure for low res region."""
+    def __init__(self, pl_params, high_res_region, plot=False):
+        """
+        Class that stores the information about the low-res "skin" particles
+        that surround the high-res inner grid.
 
-    def __init__(self, pl_params, high_res_region):
+        They are build out symetrically from the high-res grid in ever
+        decreasing resolution out to the edge of the full simulation volume.
 
+        Parameters
+        ----------
+        pl_params : ParticleLoadParams
+            Stores the parameters of the run
+        high_res_region : HighResolutionRegion object
+            Object that stores information about the high-res grid
+        plot : bool
+            Want to plot the low-res skins?
+
+        Attributes
+        ----------
+        side : float
+            Ratio between the length of the high-res grid and the total simulation volume
+        nq_info : dict
+            Information about the best discovered value of nq
+        ntot : int
+            Total number of skin particles
+        """
+
+        # Case where we have a slab high-res region.
         if pl_params.is_slab:
             self.compute_skins_slab()
+
+        # Case where we have a conventional cubic high-res region.
         else:
             self.compute_skins(pl_params, high_res_region)
 
         # Report findings.
         self.print_nq_info()
 
+        # Plot skin particles.
+        if plot:
+            plot_skins(self)
+
     def compute_skins_slab(self):
         # Starting nq is equiv of double the mass of the most massive grid particles.
         # suggested_nq = \
         #    int(num_lowest_res ** (1 / 3.) * max_cells * self.nq_mass_reduce_factor)
         # n_tot_lo = self.find_nq_slab(suggested_nq, slab_width)
-        pass
+        raise NotImplementedError
 
     def compute_skins(self, pl_params, high_res_region):
+        """
+        Compute low-res skins surrounding a cubic high-res grid.
 
-        # Ensure boundary particles not less massive than smallest grid particles.
+        nq is the number of particles along a side of the high-res grid in the
+        first skin layer. As the skins go out, the number of particles along the side
+        reduce (lowering the resolution).
+
+        Parameters
+        ----------
+        pl_params : ParticleLoadParams
+            Stores the parameters of the run
+        high_res_region : HighResolutionRegion object
+            Object that stores information about the high-res grid
+        """
+
+        # Ensure boundary particles in the first skin layer wont be less
+        # massive than smallest particles in the high-res grid.
         pl_params.max_nq = np.minimum(
             int(np.floor(high_res_region.n_tot_grid_part_equiv ** (1 / 3.0))),
             pl_params._max_nq,
         )
 
-        # Starting nq is equiv of double the mass of the most massive grid particles.
+        # Guess starting nq
+        # Starting nq is equiv of <nq_mass_reduce_factor> the mass of the most
+        # massive grid particles.
         suggested_nq = np.clip(
             int(
                 high_res_region.n_tot_grid_part_equiv ** (1 / 3.0)
@@ -48,12 +97,14 @@ class LowResolutionRegion:
                 f"(min/max bounds={pl_params.min_nq}/{pl_params.max_nq})",
             )
 
-        # Compute nq
+        # Compute nq. We use the starting nq as a guess, but may need to refine
+        # it so that the skins (which are quantized) actually furfill the mass
+        # conservation of the box).
         self.side = np.true_divide(
             high_res_region.nL_cells[0],
             pl_params.nL_glass_cells_whole_volume,
         )
-        self.find_nq(self.side, suggested_nq)
+        self.nq_info = find_nq(self.side, suggested_nq)
 
         # Record total number of low res particles.
         self.n_tot = self.nq_info["n_tot_lo"]
@@ -61,54 +112,3 @@ class LowResolutionRegion:
     def print_nq_info(self):
         for att in self.nq_info.keys():
             mympi.message(f" - nq_info: {att}: {self.nq_info[att]}")
-
-    def find_nq(self, side, suggested_nq, eps=0.01):
-        """Estimate what the best value of nq should be."""
-
-        self.nq_info = {"diff": 1.0e20}
-        lbox = 1.0 / side
-
-        # Loop over a range of potential nq's.
-        for nq in np.arange(suggested_nq - 5, suggested_nq + 5, 1):
-            if nq < 10:
-                continue
-            found_good = 0
-
-            # Loop over a range of extras.
-            for extra in range(-10, 10, 1):
-                if nq + extra < 10:
-                    continue
-
-                # For this nq and extra, what volume would the particles fill.
-                total_volume, nlev = get_guess_nq(
-                    lbox, nq, extra, mympi.comm_rank, mympi.comm_size
-                )
-                if mympi.comm_size > 1:
-                    total_volume = mympi.comm.allreduce(total_volume)
-
-                # How does this volume compare to the volume we need to fill?
-                diff = np.abs(1 - (total_volume / (lbox**3.0 - 1.0**3)))
-
-                if diff < self.nq_info["diff"]:
-                    self.nq_info["diff"] = diff
-                    self.nq_info["nq"] = nq
-                    self.nq_info["extra"] = extra
-                    self.nq_info["nlev"] = nlev
-                    self.nq_info["total_volume"] = total_volume
-
-        assert self.nq_info["diff"] <= eps, "Did not find good nq. (diff = %.6f)" % (
-            self.nq_info["diff"]
-        )
-
-        # Compute low res particle number for this core.
-        n_tot_lo = 0
-        for l in range(self.nq_info["nlev"]):
-            if l % mympi.comm_size != mympi.comm_rank:
-                continue
-            if l == self.nq_info["nlev"] - 1:
-                n_tot_lo += (
-                    self.nq_info["nq"] - 1 + self.nq_info["extra"]
-                ) ** 2 * 6 + 2
-            else:
-                n_tot_lo += (self.nq_info["nq"] - 1) ** 2 * 6 + 2
-        self.nq_info["n_tot_lo"] = n_tot_lo

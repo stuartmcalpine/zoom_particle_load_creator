@@ -26,7 +26,7 @@ softening_rules: "eagle"
 template_set:       sibelius
 
 # For IC gen param file
-ic_dir:             /cosma7/data/dp004/rttw52/codes/ic_gen/run/
+ic_dir:             ./my_example_particle_load/
 ndim_fft_start:     15
 multigrid_ics:      True
 n_species:          2

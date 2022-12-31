@@ -69,7 +69,7 @@ def compute_masses(pl_params):
 def compute_softening(pl_params):
     """
     Compute softning legnths of the particles.
-   
+
     Parameters
     ----------
     pl_params : PLParams object
@@ -104,7 +104,7 @@ def compute_softening(pl_params):
 
     # Cube root of the total number of particles.
     N = pl_params.n_particles ** (1 / 3.0)
-    
+
     # Mean inter-particle seperation.
     mean_inter = pl_params.box_size / N
 
@@ -115,8 +115,8 @@ def compute_softening(pl_params):
     # Baryon softening lengths.
     if pl_params.softening_rules == "flamingo":
         raise NotImplementedError("Fix Flamingo softenings")
-        #pl_params.eps_baryon = pl_paramseps_dm
-        #pl_params.eps_baryon_physical = pl_params.eps_dm_physical
+        # pl_params.eps_baryon = pl_paramseps_dm
+        # pl_params.eps_baryon_physical = pl_params.eps_dm_physical
     elif pl_params.softening_rules == "eagle-xl":
         fac = ((pl_params.Omega0 - pl_params.OmegaBaryon) / pl_params.OmegaBaryon) ** (
             1.0 / 3

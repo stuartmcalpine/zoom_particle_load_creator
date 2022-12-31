@@ -4,13 +4,14 @@ import numpy as np
 
 import particle_load.mympi as mympi
 from particle_load.high_resolution_region import HighResolutionRegion
-#from particle_load.ic_gen_functions import compute_fft_stats
+from particle_load.ic_gen_functions import compute_fft_stats
 from particle_load.low_resolution_region import LowResolutionRegion
-#from particle_load.param_files import build_param_dict
-#from particle_load.param_files import make_param_file_ics, make_submit_file_ics
-#from particle_load.param_files import make_param_file_swift, make_submit_file_swift
+
+# from particle_load.param_files import build_param_dict
+# from particle_load.param_files import make_param_file_ics, make_submit_file_ics
+# from particle_load.param_files import make_param_file_swift, make_submit_file_swift
 from particle_load.params import ParticleLoadParams
-#from particle_load.populate_particles import populate_particles
+from particle_load.populate_particles import populate_all_particles
 
 # Command line args.
 parser = argparse.ArgumentParser()
@@ -46,7 +47,7 @@ def print_stats(high_res_region, low_res_region, pl_params, n_tot):
     mympi.print_section_header("Totals")
 
     min_ranks = np.true_divide(n_tot, pl_params.max_particles_per_ic_file)
-    
+
     mympi.message(f"Total number of particles {n_tot} ({n_tot**(1/3.):.1f} cubed)")
     if high_res_region is not None:
         if mympi.comm_size > 1:
@@ -54,7 +55,10 @@ def print_stats(high_res_region, low_res_region, pl_params, n_tot):
         else:
             frac = high_res_region.tot_num_glass_particles / n_tot
         mympi.message(f" - Fraction that are glass particles = {frac*100.:.3f}%")
-    mympi.message(f"Num ranks needed for less than <max_particles_per_ic_file> = {min_ranks:.2f}")
+    mympi.message(
+        f"Num ranks needed for less than <max_particles_per_ic_file> = {min_ranks:.2f}"
+    )
+
 
 # Go...
 
@@ -68,26 +72,26 @@ if pl_params.is_zoom:
     # Low resolution boundary particles.
     mympi.print_section_header("Low resolution shells")
     low_res_region = LowResolutionRegion(pl_params, high_res_region)
-#
-#    # Total number of particles in particle load.
-#    n_tot_local = high_res_region.n_tot + low_res_region.n_tot
-#    if mympi.comm_size > 1:
-#        n_tot = mympi.comm.allreduce(n_tot_local)
-#    else:
-#        n_tot = n_tot_local
-#
-#    # Compute FFT size.
-#    mympi.print_section_header("FFT stats")
-#    if mympi.comm_rank == 0:
-#        compute_fft_stats(np.max(high_res_region.size_mpch), n_tot, pl_params)
-#
-#    # Populate the grid with particles.
-#    if pl_params.save_pl_data:
-#        mympi.print_section_header("Populating and saving particles")
-#        populate_particles(high_res_region, low_res_region, pl_params)
-#
+
+    # Total number of particles in particle load.
+    n_tot_local = high_res_region.n_tot + low_res_region.n_tot
+    if mympi.comm_size > 1:
+        n_tot = mympi.comm.allreduce(n_tot_local)
+    else:
+        n_tot = n_tot_local
+
+    # Compute FFT size.
+    mympi.print_section_header("FFT stats")
+    if mympi.comm_rank == 0:
+        compute_fft_stats(np.max(high_res_region.size_mpch), n_tot, pl_params)
+
+    # Populate the grid with particles.
+    if pl_params.save_pl_data:
+        mympi.print_section_header("Populating and saving particles")
+        populate_all_particles(high_res_region, low_res_region, pl_params)
+
 ## Generate particle load for uniform volume.
-#else:
+# else:
 #    high_res_region = None
 #    low_res_region = None
 #
@@ -101,10 +105,10 @@ if pl_params.is_zoom:
 #        compute_fft_stats(None, None, n_tot, pl_params)
 #
 ## Print total number of particles in particle load.
-#print_stats(high_res_region, low_res_region, pl_params, n_tot)
+# print_stats(high_res_region, low_res_region, pl_params, n_tot)
 #
 ## Make the param files.
-#if mympi.comm_rank == 0:
+# if mympi.comm_rank == 0:
 #    param_dict = build_param_dict(pl_params, high_res_region)
 #
 #    if pl_params.make_ic_gen_param_files:
