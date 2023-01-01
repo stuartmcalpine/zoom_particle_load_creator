@@ -1,16 +1,10 @@
 ## Zoom-in simulations particle load creator
 
-<figure>
-    <img src="/examples/5Mpc_1_high_res.png"
-         alt="Sibelius 5Mpc region high res grid">
-    <figcaption>The Lagrangian particle positions (blue) and generated mask that envelops that region (red) for all the particles within R=5Mpc of the Milky Way in the Sibelius-DARK simulation at z=0 (blue ring). The minimum bounding box, and minimum bounding box with equal sides are also shown. It is these mask positions that are stored as the output of the zoom-mask-creator function.</figcaption>
-</figure>
-
-<figure>
-    <img src="/examples/5Mpc_1_low_res_skins.png"
-         alt="Sibelius 5Mpc region low res skins">
-    <figcaption>The Lagrangian particle positions (blue) and generated mask that envelops that region (red) for all the particles within R=5Mpc of the Milky Way in the Sibelius-DARK simulation at z=0 (blue ring). The minimum bounding box, and minimum bounding box with equal sides are also shown. It is these mask positions that are stored as the output of the zoom-mask-creator function.</figcaption>
-</figure>
+<p float="left">
+  <img src="/examples/5Mpc_1_high_res.png" width="100" />
+  <img src="/examples/5Mpc_1_low_res_skins.png" width="100" /> 
+  <img src="/img3.png" width="100" />
+</p>
 
 ### Requirements
 
