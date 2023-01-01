@@ -365,6 +365,12 @@ class HighResolutionRegion:
             num_lowest_res = mympi.comm.allreduce(num_lowest_res, op=MPI.MIN)
         self.n_tot_grid_part_equiv = n_tot_cells * num_lowest_res
 
+        # Total number of just glass particles.
+        self.tot_num_glass_particles = this_tot_num_glass_particles
+
+        # Total number of just grid particles.
+        self.tot_num_grid_particles = this_tot_num_grid_particles
+
         # Total number of particles in the high-res grid.
         self.n_tot = this_tot_num_grid_particles + this_tot_num_glass_particles
 

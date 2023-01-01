@@ -140,8 +140,9 @@ def compute_fft_stats(max_boxsize, all_ntot, pl_params):
     Attributes added to pl_params
     -----------------------------
     high_res_n_eff : int
-
+        Effective resolution in the high-res region
     high_res_L : float
+        Size of the high res region
     """
 
     # Values for FFT over the whole box at target res. True for:
@@ -189,6 +190,7 @@ def compute_fft_stats(max_boxsize, all_ntot, pl_params):
     while float(ndim_fft) / float(N) < pl_params.fft_times_fac:
         ndim_fft *= 2
     print("Using ndim_fft = %d" % ndim_fft)
+    pl_params.ndim_fft = ndim_fft
 
     # Determine number of cores to use based on memory requirements.
     # Number of cores must also be a factor of ndim_fft.

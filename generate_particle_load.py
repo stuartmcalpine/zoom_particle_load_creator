@@ -7,9 +7,8 @@ from particle_load.high_resolution_region import HighResolutionRegion
 from particle_load.ic_gen_functions import compute_fft_stats
 from particle_load.low_resolution_region import LowResolutionRegion
 
-# from particle_load.param_files import build_param_dict
-# from particle_load.param_files import make_param_file_ics, make_submit_file_ics
-# from particle_load.param_files import make_param_file_swift, make_submit_file_swift
+from particle_load.make_param_files import build_param_dict
+from particle_load.make_param_files import make_ic_param_files, make_swift_param_files 
 from particle_load.params import ParticleLoadParams
 from particle_load.populate_particles import populate_all_particles
 
@@ -51,10 +50,13 @@ def print_stats(high_res_region, low_res_region, pl_params, n_tot):
     mympi.message(f"Total number of particles {n_tot} ({n_tot**(1/3.):.1f} cubed)")
     if high_res_region is not None:
         if mympi.comm_size > 1:
-            frac = mympi.comm.allreduce(high_res_region.tot_num_glass_particles) / n_tot
+            frac_glass = mympi.comm.allreduce(high_res_region.tot_num_glass_particles) / n_tot
+            frac_grid = mympi.comm.allreduce(high_res_region.tot_num_grid_particles) / n_tot
         else:
-            frac = high_res_region.tot_num_glass_particles / n_tot
-        mympi.message(f" - Fraction that are glass particles = {frac*100.:.3f}%")
+            frac_glass = high_res_region.tot_num_glass_particles / n_tot
+            frac_grid = high_res_region.tot_num_grid_particles / n_tot
+        mympi.message(f" - Fraction that are glass particles = {frac_glass*100.:.3f}%")
+        mympi.message(f" - Fraction that are grid particles = {frac_grid*100.:.3f}%")
     mympi.message(
         f"Num ranks needed for less than <max_particles_per_ic_file> = {min_ranks:.2f}"
     )
@@ -104,20 +106,15 @@ if pl_params.is_zoom:
 #    if mympi.comm_rank == 0:
 #        compute_fft_stats(None, None, n_tot, pl_params)
 #
-## Print total number of particles in particle load.
-# print_stats(high_res_region, low_res_region, pl_params, n_tot)
-#
-## Make the param files.
-# if mympi.comm_rank == 0:
-#    param_dict = build_param_dict(pl_params, high_res_region)
-#
-#    if pl_params.make_ic_gen_param_files:
-#        make_param_file_ics(param_dict)
-#        make_submit_file_ics(param_dict)
-#        print("Saved ics param and submit file.")
-#
-#    if pl_params.make_swift_param_files:
-#        # Make swift param file (remember no h's for swift).
-#        make_param_file_swift(param_dict)
-#        make_submit_file_swift(param_dict)
-#        print("Saved swift param and submit file.")
+# Print total number of particles in particle load.
+print_stats(high_res_region, low_res_region, pl_params, n_tot)
+
+# Make the param files.
+if mympi.comm_rank == 0:
+    param_dict = build_param_dict(pl_params, high_res_region)
+
+    if pl_params.make_ic_gen_param_files:
+        make_ic_param_files(param_dict)
+
+    if pl_params.make_swift_param_files:
+        make_swift_param_files(param_dict)

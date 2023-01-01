@@ -19,8 +19,8 @@ n_particles: 3402072064
 # (but will take longer to make). Needs matching number in ./glass_files dir.
 glass_num: 103823
 
-# File name of the output mask.
-f_name: eagle_100
+# Where everything gets saved to
+save_dir: /where/to/save/
 
 # Panphasian descriptor for ic_gen
 panphasian_descriptor: " [Panph1,L16,(31250,23438,39063),S12,CH1050187043,EAGLE_L0100_VOL1]"
@@ -126,4 +126,33 @@ multigrid_ics: False
 # You have to choose the right number of cores to make this possible.
 max_particles_per_ic_file: 400**3
 
+# --------------------------------------------------------
+# Optional parameters (relating to ic_gen parameter files)
+# The parameters shown are the defaults
+# --------------------------------------------------------
 
+# How many constrained files?
+num_constraint_files: 0
+
+# Use Peano-Hilbert IDs for particles?
+use_ph_ids: True
+
+# nbit for Peano-Hilbert keys
+nbit: 21
+
+# When do we run ic_until
+starting_z: 127
+
+# -------------------------------------------------------
+# Optional parameters (relating to swift parameter files)
+# The parameters shown are the defaults
+# -------------------------------------------------------
+
+# Starting redshift
+starting_z: 127
+
+# Final redshift
+finishing_z: 0
+
+# Softening for background particles
+softening_ratio_background: 0.02
