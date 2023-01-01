@@ -1,11 +1,17 @@
+[![python](https://img.shields.io/badge/Python-3.8-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
+[![python](https://img.shields.io/badge/Python-3.9-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
+[![python](https://img.shields.io/badge/Python-3.10-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 ## Zoom-in simulations particle load creator
 
 <p float="left">
-  <img src="/examples/5Mpc_1_high_res.png" width="500" />
-  <img src="/examples/5Mpc_1_low_res_skins.png" width="500" /> 
+  <img src="/examples/5Mpc_1_high_res.png" width="400" />
+  <img src="/examples/5Mpc_1_low_res_skins.png" width="400" /> 
 </p>
 
 ### Requirements
+If you are creating a particle load from a mask, expects masks in the format as created by [zoom_mask_creator](https://github.com/stuartmcalpine/zoom_mask_creator).
 
 * `OpenMPI` or other MPI library
 * Python >=`3.8`,<`3.11`
@@ -27,9 +33,11 @@ First make sure your `pip` is up-to-date:
 Then you can install the `zoom-mask-creator` package by typing the following in
 the git directory:
 
-* `python3 -m pip install .`
+* `python3 -m pip install -e .`
 
-which will install `zoom-mask-creator` and any dependencies.
+which will install `generate-particle-load` and any dependencies.
+
+As a final step, compile the `Cython` dependencies.
 
 ### MPI installation for `read_swift`
 
