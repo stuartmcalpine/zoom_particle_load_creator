@@ -149,6 +149,7 @@ class ParticleLoadParams:
         ), "Number of particles must divide into glass_num 2"
 
         # Check we have the constraints descriptors.
+        assert self.num_constraint_files <= 2
         if self.num_constraint_files > 0:
             for i in range(self.num_constraint_files):
                 assert hasattr(self, f"constraint_phase_descriptor_{i+1}")
