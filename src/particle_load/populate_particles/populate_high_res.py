@@ -1,7 +1,7 @@
 import numpy as np
 
 import particle_load.mympi as mympi
-from particle_load.MakeGrid import get_populated_grid
+from particle_load.cython import get_populated_grid
 
 from .functions import com, rescale
 

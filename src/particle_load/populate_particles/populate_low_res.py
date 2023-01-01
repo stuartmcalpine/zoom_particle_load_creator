@@ -1,7 +1,7 @@
 import numpy as np
 
 import particle_load.mympi as mympi
-from particle_load.MakeGrid import get_layered_particles
+from particle_load.cython import get_layered_particles
 
 
 def populate_low_res_skins(

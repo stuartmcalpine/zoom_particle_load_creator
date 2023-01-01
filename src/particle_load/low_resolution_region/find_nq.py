@@ -1,6 +1,6 @@
 import numpy as np
 import particle_load.mympi as mympi
-from particle_load.MakeGrid import get_guess_nq
+from particle_load.cython import get_guess_nq
 
 
 def find_nq(side, suggested_nq, eps=0.01):

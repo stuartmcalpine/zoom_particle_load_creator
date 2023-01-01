@@ -7,7 +7,9 @@ name = "particle_load"
 description = "Make particles loads for Virgo Consortium zoom-in simulations"
 license = {text = "BSD 3-Clause License"}
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "License :: OSI Approved :: BSD 3-Clause License",
 ]
 dependencies = [
@@ -28,33 +30,6 @@ authors = [
 
 [tool.setuptools.packages.find]
 where = ["src"]  # list of folders that contain the packages (["."] by default)
-
-[tool.local.cythonize]
-# This attr can contain multiple globs
-src = ["src/**/*.pyx"]
-
-#[tool.local.cythonize.env]
-# Env vars provisioned during cythonize call
-#ANSIBLE_PYLIBSSH_TRACING = "1"
-#CFLAGS = "-DCYTHON_TRACE=1 ${CFLAGS}"
-#LDFLAGS = "-lssh ${LDFLAGS}"
-
-[tool.local.cythonize.flags]
-# This section can contain the following booleans:
-# * annotate — generate annotated HTML page for source files
-# * build — build extension modules using distutils
-# * inplace — build extension modules in place using distutils (implies -b)
-# * force — force recompilation
-# * quiet — be less verbose during compilation
-# * lenient — increase Python compat by ignoring some compile time errors
-# * keep-going — compile as much as possible, ignore compilation failures
-annotate = false
-build = false
-inplace = true
-force = true
-quiet = false
-lenient = false
-keep-going = false
 
 [project.scripts]
 generate-particle-load = "scripts.generate_particle_load:main"

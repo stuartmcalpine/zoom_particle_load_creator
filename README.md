@@ -37,7 +37,7 @@ the git directory:
 
 which will install `generate-particle-load` and any dependencies.
 
-As a final step, compile the `Cython` dependencies.
+As a final step, compile the `Cython` dependencies. Goto `src/particle_load/cython` and run `cythonize -i MakeGrid.pyx`.
 
 ### MPI installation for `read_swift`
 

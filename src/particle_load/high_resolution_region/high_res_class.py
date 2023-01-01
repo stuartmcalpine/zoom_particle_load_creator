@@ -3,7 +3,7 @@ import h5py
 import numpy as np
 
 import particle_load.mympi as mympi
-from particle_load.MakeGrid import *
+from particle_load.cython import get_grid, get_find_skin_cells, get_assign_mask_cells
 from mpi4py import MPI
 
 from .nearest import find_nearest_glass_file, find_nearest_cube

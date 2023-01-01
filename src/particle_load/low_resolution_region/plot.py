@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 import particle_load.mympi as mympi
 import numpy as np
-from particle_load.MakeGrid import get_layered_particles
+from particle_load.cython import get_layered_particles
 
 
 def plot_skins(low_res_region):
