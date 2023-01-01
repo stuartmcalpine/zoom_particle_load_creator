@@ -55,3 +55,6 @@ force = true
 quiet = false
 lenient = false
 keep-going = false
+
+[project.scripts]
+generate-particle-load = "scripts.generate_particle_load:main"

@@ -240,7 +240,6 @@ class ParticleLoadParams:
         self._add_default_value("min_nq", 20)
         self._add_default_value("_max_nq", 1000)
         self._add_default_value("grid_also_glass", True)
-        self._add_default_value("glass_files_dir", "./glass_files/")
         self._add_default_value("softening_ratio_background", 0.02)
         self._add_default_value("ncores_node", 28)
         

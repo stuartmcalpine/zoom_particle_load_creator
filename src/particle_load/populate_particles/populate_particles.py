@@ -45,13 +45,9 @@ def populate_all_particles(
     if pl_params.grid_also_glass:
         for this_glass_no in high_res_region.cell_info["num_particles_per_cell"]:
             if this_glass_no not in glass.keys():
-                glass[this_glass_no] = load_glass_file(
-                    this_glass_no, pl_params.glass_files_dir
-                )
+                glass[this_glass_no] = load_glass_file(this_glass_no)
     else:
-        glass[pl_params.glass_num] = load_glass_file(
-            pl_params.glass_num, pl_params.glass_files_dir
-        )
+        glass[pl_params.glass_num] = load_glass_file(pl_params.glass_num)
 
     # Populate high resolution grid with particles.
     populate_high_res_grid(

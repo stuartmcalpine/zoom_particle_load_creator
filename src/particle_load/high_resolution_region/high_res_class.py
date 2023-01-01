@@ -324,9 +324,7 @@ class HighResolutionRegion:
 
                 if pl_params.grid_also_glass:
                     # Find glass file with the closest number of particles.
-                    num_in_grid_cell = find_nearest_glass_file(
-                        desired_no, pl_params.glass_files_dir
-                    )
+                    num_in_grid_cell = find_nearest_glass_file(desired_no)
                 else:
                     # Find nearest cube to this number, for grid.
                     num_in_grid_cell = self.find_nearest_cube(desired_no)

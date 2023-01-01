@@ -1,9 +1,13 @@
 import numpy as np
+import os
 
 import particle_load.mympi as mympi
+import particle_load
 
+# Where the template files are located.
+_GLASS_DIR = os.path.join(particle_load.__path__[0], "glass_files")
 
-def load_glass_file(num, glass_files_dir):
+def load_glass_file(num):
     """
     Load a ascii glass file.
 
@@ -11,8 +15,6 @@ def load_glass_file(num, glass_files_dir):
     ----------
     num : int
         Number of particles in the glass file
-    glass_files_dir : string
-        Where are the glass files stored
 
     Returns
     -------
@@ -20,7 +22,7 @@ def load_glass_file(num, glass_files_dir):
         Glass particle coordinates
     """
     glass = np.loadtxt(
-        glass_files_dir + "ascii_glass_%i" % num,
+        _GLASS_DIR + "ascii_glass_%i" % num,
         dtype={"names": ["x", "y", "z"], "formats": ["f8", "f8", "f8"]},
         skiprows=1,
     )

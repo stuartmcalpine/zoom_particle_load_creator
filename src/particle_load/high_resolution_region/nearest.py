@@ -1,8 +1,11 @@
 import numpy as np
 import os
+import particle_load
 
+# Where the template files are located.
+_GLASS_DIR = os.path.join(particle_load.__path__[0], "glass_files")
 
-def find_nearest_glass_file(num, glass_files_dir):
+def find_nearest_glass_file(num):
     """
     Find glass file that has the closest number of particles to <num>.
 
@@ -10,15 +13,13 @@ def find_nearest_glass_file(num, glass_files_dir):
     ----------
     num : int
         Number of particles we want to find the closest match for
-    glass_files_dir : string
-        Directory containing the ascii glass files
 
     Returns
     -------
     files[idx] : string
         The filename of the glass file with the closest match
     """
-    files = os.listdir(glass_files_dir)
+    files = os.listdir(_GLASS_DIR)
 
     files = np.array(
         [int(x.split("_")[2]) for x in files if "ascii_glass_" in x], dtype="i8"
