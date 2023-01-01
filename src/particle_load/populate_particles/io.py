@@ -22,7 +22,7 @@ def load_glass_file(num):
         Glass particle coordinates
     """
     glass = np.loadtxt(
-        _GLASS_DIR + "ascii_glass_%i" % num,
+        os.path.join(_GLASS_DIR, f"ascii_glass_{num}"),
         dtype={"names": ["x", "y", "z"], "formats": ["f8", "f8", "f8"]},
         skiprows=1,
     )
