@@ -32,4 +32,4 @@ authors = [
 where = ["src"]
 
 [project.scripts]
-zoom-particle-load-creator = "scripts.generate_particle_load:main"
+zoom-particle-load-creator = "particle_load.scripts.generate_particle_load:main"
