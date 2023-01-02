@@ -1,0 +1,19 @@
+#!/bin/bash -l
+
+#SBATCH --ntasks=1
+#SBATCH -J $f_name
+#SBATCH --output=out_files/log_%j.txt
+#SBATCH -p cosma8
+#SBATCH -A dp004
+#SBATCH --exclusive
+#SBATCH --cpus-per-task=128
+#SBATCH --time=$num_hours_swift:00:00
+#SBATCH --no-requeue
+
+load_swift_c8_2018
+
+../../swiftsim/swift -v 1 --pin --cosmology --self-gravity --threads=$$SLURM_CPUS_PER_TASK --fof params.yml
+
+echo "Job done, info follows..."
+sacct -j $$SLURM_JOBID --format=JobID,JobName,Partition,AveRSS,MaxRSS,AveVMSize,MaxVMSize,Elapsed,ExitCode
+exit
