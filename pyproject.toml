@@ -1,10 +1,12 @@
 [build-system]
-requires = ["setuptools >= 60", "Cython"]
+requires = ["setuptools >= 60"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "particle_load"
-description = "Make particles loads for Virgo Consortium zoom-in simulations"
+name = "zoom_particle_load_creator"
+description = "Make a particle load for Virgo Consortium-style zoom-in simulations."
+readme = "README.md"
+requires-python = ">=3.8,<3.11"
 license = {text = "BSD 3-Clause License"}
 classifiers = [
     "Programming Language :: Python :: 3.8",
@@ -21,15 +23,13 @@ dependencies = [
     "matplotlib",
     "scipy"
 ]
-requires-python = ">=3.8,<3.11"
 version = "0.0.1"
-readme = "README.md"
 authors = [
   { name="Stuart McAlpine", email="stuart.mcalpine@fysik.su.se" },
 ]
 
 [tool.setuptools.packages.find]
-where = ["src"]  # list of folders that contain the packages (["."] by default)
+where = ["src"]
 
 [project.scripts]
-generate-particle-load = "scripts.generate_particle_load:main"
+zoom-particle-load-creator = "scripts.generate_particle_load:main"
