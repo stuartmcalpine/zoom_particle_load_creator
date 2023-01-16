@@ -1,4 +1,5 @@
 import numpy as np
+
 import particle_load.mympi as mympi
 from particle_load.cython import get_guess_nq
 
@@ -10,7 +11,8 @@ def find_nq(side, suggested_nq, eps=0.01):
     Parameters
     ----------
     side : float
-        Ratio between the length of the high-res grid and the total simulation volume
+        Ratio between the length of the high-res grid and the total simulation
+        volume
     suggested_nq : int
         Starting point for computing nq
     eps : float

@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 import particle_load.mympi as mympi
-import numpy as np
 from particle_load.cython import get_layered_particles
 
 

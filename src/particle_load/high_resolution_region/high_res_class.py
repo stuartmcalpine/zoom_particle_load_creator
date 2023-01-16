@@ -1,17 +1,18 @@
 import os
+
 import h5py
 import numpy as np
-
-import particle_load.mympi as mympi
-from particle_load.cython import get_grid, get_find_skin_cells, get_assign_mask_cells
 from mpi4py import MPI
 
-from .nearest import find_nearest_glass_file, find_nearest_cube
+import particle_load.mympi as mympi
+from particle_load.cython import get_assign_mask_cells, get_find_skin_cells, get_grid
+
+from .nearest import find_nearest_cube, find_nearest_glass_file
 from .plot import plot_high_res_region
 
 
 class HighResolutionRegion:
-    def __init__(self, pl_params, plot=False):
+    def __init__(self, pl_params):
         """
         Class that stores the information about the high-res grid generated
         using the HDF5 mask file.
@@ -20,8 +21,6 @@ class HighResolutionRegion:
         ----------
         pl_params : ParticleLoadParams
             Stores the parameters of the run
-        plot : bool
-            Want to plot the high-res grid?
 
         Attributes
         ----------
@@ -55,7 +54,7 @@ class HighResolutionRegion:
         self._count_high_res_particles(pl_params)
 
         # Plot the high res grid.
-        if plot:
+        if pl_params.make_extra_plots:
             plot_high_res_region(pl_params, self.offsets, self.cell_types)
 
     def _set_initial_dimensions(self, pl_params):

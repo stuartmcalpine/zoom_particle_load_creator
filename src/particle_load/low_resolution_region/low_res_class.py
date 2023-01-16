@@ -7,13 +7,14 @@ from .plot import plot_skins
 
 
 class LowResolutionRegion:
-    def __init__(self, pl_params, high_res_region, plot=False):
+    def __init__(self, pl_params, high_res_region):
         """
         Class that stores the information about the low-res "skin" particles
         that surround the high-res inner grid.
 
         They are build out symetrically from the high-res grid in ever
-        decreasing resolution out to the edge of the full simulation volume.
+        decreasing resolution steps out to the edge of the full simulation
+        volume.
 
         Parameters
         ----------
@@ -21,13 +22,12 @@ class LowResolutionRegion:
             Stores the parameters of the run
         high_res_region : HighResolutionRegion object
             Object that stores information about the high-res grid
-        plot : bool
-            Want to plot the low-res skins?
 
         Attributes
         ----------
         side : float
-            Ratio between the length of the high-res grid and the total simulation volume
+            Ratio between the length of the high-res grid and the total
+            simulation volume
         nq_info : dict
             Information about the best discovered value of nq
         ntot : int
@@ -46,7 +46,7 @@ class LowResolutionRegion:
         self.print_nq_info()
 
         # Plot skin particles.
-        if plot:
+        if pl_paramas.make_extra_plots:
             plot_skins(self)
 
     def compute_skins_slab(self):
@@ -60,9 +60,10 @@ class LowResolutionRegion:
         """
         Compute low-res skins surrounding a cubic high-res grid.
 
-        nq is the number of particles along a side of the high-res grid in the
-        first skin layer. As the skins go out, the number of particles along the side
-        reduce (lowering the resolution).
+        nq is the number of particles along a side of the high-res grid in each
+        skin layer. As you get further from the grid, the number of particles
+        in a skin stays the same, but the volume increases, therefore the
+        resolution of each paritcle lowers.
 
         Parameters
         ----------
@@ -110,5 +111,7 @@ class LowResolutionRegion:
         self.n_tot = self.nq_info["n_tot_lo"]
 
     def print_nq_info(self):
+        """Print information about the discovered value of nq"""
+
         for att in self.nq_info.keys():
             mympi.message(f" - nq_info: {att}: {self.nq_info[att]}")

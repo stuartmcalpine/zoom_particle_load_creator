@@ -1,7 +1,8 @@
 import os
-from string import Template
-import particle_load
 import subprocess
+from string import Template
+
+import particle_load
 
 # Where the template files are located.
 _TEMPLATE_DIR = os.path.join(particle_load.__path__[0], "template_files")
@@ -49,6 +50,7 @@ def _make_submit_file_swift(swift_dir, params):
     os.chmod(f"{swift_dir}/resubmit", 0o744)
     os.chmod(f"{swift_dir}/auto_resubmit", 0o744)
 
+
 def _make_param_file_swift(swift_dir, params):
     """
     Make parameter file for swift using template.
@@ -66,12 +68,12 @@ def _make_param_file_swift(swift_dir, params):
     params["finishing_a"] = 1.0 / (1 + float(params["finishing_z"]))
 
     # Replace values.
-    #if (
+    # if (
     #    "sibelius" in params["template_set"].lower()
     #    or params["template_set"].lower() == "manticore"
-    #):
+    # ):
     #
-    #elif params["template_set"].lower() == "eaglexl":
+    # elif params["template_set"].lower() == "eaglexl":
     #    raise Exception("Fix this one")
     #    # split_mass = gas_particle_mass / 10**10. * 4.
     #    # r = [fname, '%.5f'%h, '%.8f'%starting_a, '%.8f'%finishing_a, '%.8f'%omega0, '%.8f'%omegaL,
@@ -79,7 +81,7 @@ def _make_param_file_swift(swift_dir, params):
     #    #'%.8f'%(eps_baryon/h), '%.8f'%(eps_dm_physical/h),
     #    #'%.8f'%(eps_baryon_physical/h), '%.3f'%(softening_ratio_background),
     #    #'%.8f'%split_mass, ic_dir, fname]
-    #else:
+    # else:
     #    raise ValueError("Invalid template set")
 
     # Some extra params to compute.
@@ -96,6 +98,7 @@ def _make_param_file_swift(swift_dir, params):
     # Write new param file.
     with open("%s/params.yml" % (swift_dir), "w") as f:
         f.write(result)
+
 
 def make_swift_param_files(params):
     """

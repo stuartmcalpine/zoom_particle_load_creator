@@ -8,7 +8,8 @@ def build_param_dict(pl_params, high_res_region):
     """
     Put together a dict of parameters to feed into the template files.
 
-    Essentially pulls out the parameters from pl_params and puts them in a dict.
+    Essentially pulls out the parameters from pl_params and puts them in a
+    dict.
 
     Some extra quantities are also computed.
 
@@ -25,23 +26,27 @@ def build_param_dict(pl_params, high_res_region):
         Dictionary of params
     """
 
-    # Compute mass cut offs between particle types.
+    # Compute mass cut offs between highest mass high-res-grid particles and
+    # lowest mass skin particles.
     sp1_sp2_cut = 0.0
     if pl_params.is_zoom:
         sp1_sp2_cut = np.log10(high_res_region.cell_info["glass_mass"]) + 0.01
 
-    # Glass files for non zooms.
+    # For zoomes, where is the particle load?
     if pl_params.is_zoom:
         pl_params.pl_basename = "../particle_load/fbinary/PL"
+
+    # For uniform volumes, where is the glass file?
     else:
-        pl_params.import_file = -1
-        pl_params.pl_basename = pl_params.glass_file_loc
-        pl_params.pl_rep_factor = int(
-            np.rint((pl_params.n_particles / pl_params.glass_num) ** (1 / 3.0))
-        )
-        assert (
-            pl_rep_factor**3 * pl_params.glass_num == pl_params.n_particles
-        ), "Error rep_factor"
+        raise NotImplementedError
+        # pl_params.import_file = -1
+        # pl_params.pl_basename = pl_params.glass_file_loc
+        # pl_params.pl_rep_factor = int(
+        #    np.rint((pl_params.n_particles / pl_params.glass_num) ** (1 / 3.0))
+        # )
+        # assert (
+        #    pl_rep_factor**3 * pl_params.glass_num == pl_params.n_particles
+        # ), "Error rep_factor"
 
     # Build parameter list.
     param_dict = dict(
@@ -114,10 +119,10 @@ def build_param_dict(pl_params, high_res_region):
             pl_params, f"constraint_phase_descriptor_{i+1}_levels"
         )
 
+    # Number of particles types.
     if pl_params.is_zoom:
-        param_dict['n_species'] = 2
+        param_dict["n_species"] = 2
     else:
-        param_dict['n_species'] = 1
+        param_dict["n_species"] = 1
 
     return param_dict
-

@@ -1,36 +1,41 @@
 # Filename
-f_name:             Sibelius_5Mpc_1
+save_dir:           "/path/to/savedir/"
 
-# Resolution
+# Resolution (8x lower than EAGLE standard res)
 box_size:           677.7          
-n_particles:        3402072064000
+n_particles:        426617661952
 glass_num:          512           
 
 # Params for zoom simulation
 is_zoom:            True           
-mask_file:          /cosma7/data/dp004/rttw52/codes/zoom_mask_creator/masks/Sibelius_5Mpc.hdf5
+mask_file:          "/path/to/mymask.hdf5"
 
 # Cosmology
-Omega0 = 0.3111
-OmegaLambda = 0.6889
-OmegaBaryon = 0.04897
-HubbleParam = 0.6766
-Sigma8 = 0.8102
-linear_ps = "EAGLE_XL_powspec_18-07-2019.txt"
+Omega0: 0.307
+OmegaCDM: 0.2587481
+OmegaLambda: 0.693
+OmegaBaryon: 0.0482519
+HubbleParam: 0.6777
+Sigma8: 0.8288
+linear_ps: "/path/to/extended_planck_linear_powspec"
+
+# Softening rules to use.
+softening_rules: "eagle"
 
 # Template for param files
-template_set:       sibelius
+ic_gen_template_set: "v8"
+swift_template_set: "sibelius"
 
 # For IC gen param file
-ic_dir:             /cosma7/data/dp004/rttw52/codes/ic_gen/run/
+ic_gen_exec:        "/path/to/IC_Gen.x"
 ndim_fft_start:     15
 multigrid_ics:      True
 n_species:          2
 use_ph_ids:         True
 
 # For Swift param file
-swift_ic_dir_loc:   /cosma7/data/dp004/rttw52/swift_runs/make_ics/ics/
-swift_dir:          /cosma7/data/dp004/rttw52/swift_runs/runs/Sibelius/5Mpc/
+swift_exec: swift
+swift_ic_dir_loc:   "/path/to/swift_ic_d_dir/"
 
 # Descriptors for PANPHASIA
 panphasian_descriptor: "[Panph1,L18,(12371,40578,79587),S15,CH1008830052,Desc_x000_y024_z943]"

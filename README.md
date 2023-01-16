@@ -6,8 +6,8 @@
 ## Zoom-in simulations particle load creator
 
 <p float="left">
-  <img src="/examples/5Mpc_1_high_res.png" width="400" />
-  <img src="/examples/5Mpc_1_low_res_skins.png" width="400" /> 
+  <img src="/docs/5Mpc_1_high_res.png" width="400" />
+  <img src="/docs/5Mpc_1_low_res_skins.png" width="400" /> 
 </p>
 
 ### Requirements

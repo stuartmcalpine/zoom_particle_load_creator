@@ -19,7 +19,7 @@ n_particles: 3402072064
 # (but will take longer to make). Needs matching number in ./glass_files dir.
 glass_num: 103823
 
-# Where everything gets saved to
+# Where everything gets saved to, the particle load, and the ics, and the swift dir
 save_dir: /where/to/save/
 
 # Panphasian descriptor for ic_gen

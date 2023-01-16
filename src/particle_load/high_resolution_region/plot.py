@@ -1,6 +1,6 @@
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib as mpl
 
 import particle_load.mympi as mympi
 
@@ -16,7 +16,7 @@ def plot_high_res_region(pl_params, offsets, cell_types, show_mask=False):
 
     Plots a z-slice of the high-res grid cells, and loaded mask cells.
 
-    Note the offsets are the cell corners.
+    Note the offsets are the (negative most) cell corners not cell centres.
 
     Parameters
     ----------

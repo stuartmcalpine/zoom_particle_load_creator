@@ -29,6 +29,7 @@ def main():
         "-PL_HDF5", "--save_pl_data_hdf5", help="Save HDF5 PL files.", action="store_true"
     )
     parser.add_argument("-MPI", "--with_mpi", help="Run over MPI.", action="store_true")
+    parser.add_argument("--make_extra_plots", help="Plot the high res region and low res skins as extra plots.", action="store_true")
     args = parser.parse_args()
 
     # Init MPI.

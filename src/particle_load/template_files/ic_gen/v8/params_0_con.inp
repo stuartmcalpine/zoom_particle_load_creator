@@ -58,7 +58,7 @@ $starting_z           zshift        ! Redshift of the required displacement fiel
 ------------------------------------------------------------------------------
  # ********* Phases used: place the panphasian descriptor on the line below ***
 $panphasian_descriptor
-0
+0                               ! Number of constraint files to import
 #-------------- List constraint phase descriptors and (newline) file path, and levels to use  
 -----------------------------------------------------------------------------
 1             igrid           ! Fourier grid number

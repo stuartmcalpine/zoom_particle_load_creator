@@ -89,10 +89,12 @@ def compute_softening(pl_params):
     # What softening rules to use?
     if pl_params.softening_rules == "flamingo":
         # Flamingo.
+        raise NotImplementedError
         comoving_ratio = 1 / 25.0
         physical_ratio = 1 / 100.0  # Transition at z=3.
     elif pl_params.softening_rules == "eagle-xl":
         # EagleXL.
+        raise NotImplementedError
         comoving_ratio = 1 / 20.0
         physical_ratio = 1 / 45.0  # Transition at z = 1.25
     elif pl_params.softening_rules == "eagle":
@@ -114,9 +116,8 @@ def compute_softening(pl_params):
 
     # Baryon softening lengths.
     if pl_params.softening_rules == "flamingo":
-        raise NotImplementedError("Fix Flamingo softenings")
-        # pl_params.eps_baryon = pl_paramseps_dm
-        # pl_params.eps_baryon_physical = pl_params.eps_dm_physical
+        pl_params.eps_baryon = pl_paramseps_dm
+        pl_params.eps_baryon_physical = pl_params.eps_dm_physical
     elif pl_params.softening_rules == "eagle-xl":
         fac = ((pl_params.Omega0 - pl_params.OmegaBaryon) / pl_params.OmegaBaryon) ** (
             1.0 / 3

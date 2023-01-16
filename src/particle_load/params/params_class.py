@@ -216,9 +216,9 @@ class ParticleLoadParams:
         """Fill in the default values (won't overwrite passed params)."""
 
         self._add_default_value("coords", np.array([0.0, 0.0, 0.0]))
-        self._add_default_value("radius", 0.0)
-        self._add_default_value("radius_factor", 1.0)
-        self._add_default_value("is_slab", False)
+        #self._add_default_value("radius", 0.0)
+        #self._add_default_value("radius_factor", 1.0)
+        #self._add_default_value("is_slab", False)
 
         self._add_default_value("mask_file", None)
         self._add_default_value("num_constraint_files", 0)

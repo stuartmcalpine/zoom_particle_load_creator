@@ -119,6 +119,8 @@ def _load_balance(coords_x, coords_y, coords_z, masses):
     """
     Load balance arrays between cores.
 
+    Parameters
+    ----------
     coords_x : ndarray float[n_tot,]
         x-Coordinates
     coords_y : ndarray float[n_tot,]
@@ -127,6 +129,10 @@ def _load_balance(coords_x, coords_y, coords_z, masses):
         z-coordinates
     masses : ndarray float[n_tot,]
         Particle masses
+
+    Returns
+    -------
+    coords_x, coords_y, coords_z, masses (now load balanced)
     """
 
     ndesired = np.zeros(mympi.comm_size, dtype=int)
@@ -164,6 +170,9 @@ def _load_balance(coords_x, coords_y, coords_z, masses):
 def save_pl(coords_x, coords_y, coords_z, masses, pl_params):
     """
     Save the particle load to file.
+
+    By default this is to a Fortran file for ic_gen, but can also be saved to a
+    HDF5 file.
 
     Parameters
     ----------

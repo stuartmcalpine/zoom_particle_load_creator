@@ -1,5 +1,6 @@
 import os
 from string import Template
+
 import particle_load
 
 # Where the template files are located.

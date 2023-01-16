@@ -16,7 +16,8 @@ def _compute_ic_cores_from_mem(
     much for the FFT grid. You will find these values in the
     static_memory_grids.inc and static_memory_part.inc files of ic_gen. This
     function also compute what values of nmaxpart and nmaxdisp would be optimal
-    for the given run.
+    for the given run (but obviously you would then have to change and
+    recompile ic_gen if you want to use them).
 
     Parameters
     ----------
@@ -71,10 +72,11 @@ def _compute_ic_cores_from_mem(
 
     return ncores
 
+
 def _compute_optimal_ic_mem(ndim_fft, all_ntot, pl_params):
     """
     This will compute the optimal memory to fit the IC gen on.
-    
+
     Computed based on pl_params.mem_per_core.
 
     Parameters

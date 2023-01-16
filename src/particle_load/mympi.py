@@ -23,9 +23,11 @@ def init_mpi(use_mpi):
     else:
         print("\nRunning without MPI, using one core only...")
 
+
 def message(*args, end="\n"):
     if comm_rank == 0:
         print(*args, end=end)
+
 
 def print_section_header(header_name):
     if comm_rank == 0:
