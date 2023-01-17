@@ -46,7 +46,7 @@ class LowResolutionRegion:
         self.print_nq_info()
 
         # Plot skin particles.
-        if pl_paramas.make_extra_plots:
+        if pl_params.make_extra_plots:
             plot_skins(self)
 
     def compute_skins_slab(self):

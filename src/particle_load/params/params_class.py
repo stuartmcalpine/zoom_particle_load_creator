@@ -218,7 +218,6 @@ class ParticleLoadParams:
         self._add_default_value("coords", np.array([0.0, 0.0, 0.0]))
         #self._add_default_value("radius", 0.0)
         #self._add_default_value("radius_factor", 1.0)
-        #self._add_default_value("is_slab", False)
 
         self._add_default_value("mask_file", None)
         self._add_default_value("num_constraint_files", 0)
@@ -244,6 +243,7 @@ class ParticleLoadParams:
         self._add_default_value("ncores_node", 28)
         
         # to doc
+        self._add_default_value("is_slab", False)
         self._add_default_value("n_nodes_swift", 1)
         self._add_default_value("num_hours_swift", 10)
         self._add_default_value("swift_exec_location", ".")
@@ -254,6 +254,7 @@ class ParticleLoadParams:
         self._add_default_value("high_res_n_eff", 0)
         self._add_default_value("import_file", 0)
         self._add_default_value("pl_rep_factor", 1)
+        self._add_default_value("make_extra_plots", False)
 
     def _add_default_value(self, att, value):
         """Add default parameter value to data array."""

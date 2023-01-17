@@ -1,0 +1,41 @@
+# Filename
+save_dir:           "/path/to/savedir/"
+
+# Resolution (EAGLE low res, standard res / 8)
+box_size:           67.77          
+n_particles:        425259008
+glass_num:          512           
+
+# Params for zoom simulation
+is_zoom:            True           
+mask_file:          "/path/to/mymask.hdf5"
+
+# Cosmology
+Omega0: 0.307
+OmegaCDM: 0.2587481
+OmegaLambda: 0.693
+OmegaBaryon: 0.0482519
+HubbleParam: 0.6777
+Sigma8: 0.8288
+linear_ps: "/path/to/extended_planck_linear_powspec"
+
+# Softening rules to use.
+softening_rules: "eagle"
+
+# Template for param files
+ic_gen_template_set: "v8"
+swift_template_set: "eagle"
+
+# For IC gen param file
+ic_gen_exec:        "/path/to/IC_Gen.x"
+ndim_fft_start:     12
+multigrid_ics:      True
+n_species:          2
+use_ph_ids:         True
+
+# For Swift param file
+swift_exec: swift
+swift_ic_dir_loc:   "/path/to/swift_ic_d_dir/"
+
+# Descriptors for PANPHASIA
+panphasian_descriptor: "[Panph1, L16, (31250, 23438, 39063), S12, CH1050187043, EAGLE_L0100_VOL1]"
