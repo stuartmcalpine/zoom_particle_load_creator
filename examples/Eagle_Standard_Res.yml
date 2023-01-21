@@ -38,4 +38,4 @@ swift_exec: swift
 swift_ic_dir_loc:   "/path/to/swift_ic_d_dir/"
 
 # Descriptors for PANPHASIA
-panphasian_descriptor: "[Panph1, L16, (31250, 23438, 39063), S12, CH1050187043, EAGLE_L0100_VOL1]"
+panphasian_descriptor: "[Panph1,L16,(31250,23438,39063),S12,CH1050187043,EAGLE_L0100_VOL1]"
