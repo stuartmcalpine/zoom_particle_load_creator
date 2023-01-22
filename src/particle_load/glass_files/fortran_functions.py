@@ -29,6 +29,17 @@ def read_ascii_glass_file(fname):
     return coords
 
 
+def read_fortran_glass_index(fname):
+
+    f = FortranFile(fname, "r")
+    nfiles = f.read_ints(np.int32)[0]
+    print(f"There are {nfiles} files")
+
+    for i in range(nfiles+1):
+        print(f.read_reals(np.float64))
+
+    f.close()
+
 def read_fortran_glass_file(fname, n_files):
 
     count = 0
@@ -46,6 +57,8 @@ def read_fortran_glass_file(fname, n_files):
         x = f.read_reals(np.float64)
         y = f.read_reals(np.float64)
         z = f.read_reals(np.float64)
+        m = f.read_reals(np.float32)
+        
         assert len(x) == len(y) == len(z), "Bad read length"
         assert n_files == header[4], "Bad n_files against header"
         assert len(x) == header[0], "Coords length error with file"
@@ -82,6 +95,9 @@ def write_fortran_glass_file(coords):
     ntot = len(coords)
     fname = f"fortran_glass_{ntot}.0"
 
+    masses = np.empty(ntot, dtype=np.float32)
+    masses[:] = 1/ntot
+
     f = FortranFile(fname, "w")
 
     header = np.array([ntot, ntot, 0, 0, 1, 10001, 0, 0, 0, 0, 0, 0], dtype=np.int32)
@@ -89,15 +105,32 @@ def write_fortran_glass_file(coords):
     f.write_record(coords[:, 0])
     f.write_record(coords[:, 1])
     f.write_record(coords[:, 2])
+    f.write_record(masses)
     f.close()
 
+    # Write the index file.
+    fname = f"fortran_glass_{ntot}.index"
+
+    f = FortranFile(fname, "w")
+
+    header = np.array([1], dtype=np.int32)
+    f.write_record(header)
+    f.write_record(np.array([0.0], dtype=np.float64))
+    f.write_record(np.array([1.0], dtype=np.float64))
+    f.close()
 
 if __name__ == "__main__":
-    fname = "/cosma7/data/dp004/arj/projects/Eagle_200/glass/Eagle_glass_file_47"
-    read_fortran_glass_file(fname, 32)
+    #fname = "/cosma7/data/dp004/arj/projects/Eagle_200/glass/Eagle_glass_file_47"
+    #read_fortran_glass_file(fname, 32)
 
-    coords = np.random.rand(100, 3)
-    write_fortran_glass_file(coords)
+    ##fname = "/cosma7/data/dp004/arj/projects/Eagle_200/glass/Eagle_glass_file_47.index"
+    #read_fortran_glass_index(fname)
 
-    coordsnew = read_fortran_glass_file("fortran_glass_100", 1)
-    assert ip.array_equal(caords, coordsnew), "Bad array match"
+    fname = "fortran_glass_103823"
+    read_fortran_glass_file(fname, 1)
+
+    #coords = np.random.rand(100, 3)
+    #write_fortran_glass_file(coords)
+
+    #coordsnew = read_fortran_glass_file("fortran_glass_100", 1)
+    #assert ip.array_equal(caords, coordsnew), "Bad array match"

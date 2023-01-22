@@ -44,7 +44,7 @@ $two_lpt                       ! 2lpt ICS:  0-No 1-Yes (Cosm)  2-Yes (Resim)
 --------------------------------------------------------------------------------------------
 $import_file                            ! 0 - Import file : -1 -  cosm glass file:  > 0 the 1-d cubic grid size
 '$pl_basename'  ! (Imported) Part load basename
-1                             !             ! Part load Rep factor
+$pl_rep_factor                             !             ! Part load Rep factor
 './ICs/ics'  !output file base name
 ------------------------------------------------------------------------------
 '$linear_ps'         ! Input Power spectrum to use

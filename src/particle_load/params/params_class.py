@@ -245,7 +245,7 @@ class ParticleLoadParams:
         self._add_default_value("is_slab", False)
         self._add_default_value("n_nodes_swift", 1)
         self._add_default_value("num_hours_swift", 10)
-        self._add_default_value("swift_exec_location", ".")
+        self._add_default_value("swift_exec", ".")
         self._add_default_value("num_hours_ic_gen", 10)
         self._add_default_value("n_cores_ic_gen", None)
         self._add_default_value("verbose", True)

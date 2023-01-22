@@ -3,7 +3,6 @@ import re
 
 import numpy as np
 
-
 def build_param_dict(pl_params, high_res_region):
     """
     Put together a dict of parameters to feed into the template files.
@@ -31,6 +30,7 @@ def build_param_dict(pl_params, high_res_region):
     sp1_sp2_cut = 0.0
     if pl_params.is_zoom:
         sp1_sp2_cut = np.log10(high_res_region.cell_info["glass_mass"]) + 0.01
+        print(f"Sp1->Sp2 cut: {sp1_sp2_cut}")
 
     # For zoomes, where is the particle load?
     if pl_params.is_zoom:
@@ -38,15 +38,18 @@ def build_param_dict(pl_params, high_res_region):
 
     # For uniform volumes, where is the glass file?
     else:
-        raise NotImplementedError
-        # pl_params.import_file = -1
-        # pl_params.pl_basename = pl_params.glass_file_loc
-        # pl_params.pl_rep_factor = int(
-        #    np.rint((pl_params.n_particles / pl_params.glass_num) ** (1 / 3.0))
-        # )
-        # assert (
-        #    pl_rep_factor**3 * pl_params.glass_num == pl_params.n_particles
-        # ), "Error rep_factor"
+        pl_params.import_file = -1
+        pl_params.pl_basename = pl_params.glass_file_loc
+        tmp_glass_no = int(pl_params.pl_basename.split("_")[-1])
+        assert tmp_glass_no == pl_params.glass_num, "Glass num and file not match"
+        pl_params.pl_rep_factor = int(
+           np.rint((pl_params.n_particles / pl_params.glass_num) ** (1 / 3.0))
+        )
+        assert (
+            pl_params.pl_rep_factor**3 * pl_params.glass_num == pl_params.n_particles
+        ), "Error rep_factor"
+        print(f"Uniform volume {pl_params.glass_num**(1/3.):.0f}**3 replicated",
+              f"{pl_params.pl_rep_factor}**3 times")
 
     # Build parameter list.
     param_dict = dict(
@@ -85,7 +88,7 @@ def build_param_dict(pl_params, high_res_region):
         "gas_particle_mass",
         "num_constraint_files",
         "num_hours_ic_gen",
-        "swift_exec_location",
+        "swift_exec",
         "num_hours_swift",
     ]:
         param_dict[att] = getattr(pl_params, att)

@@ -4,7 +4,7 @@ import numpy as np
 
 import particle_load
 
-# Where the template files are located.
+# Where the glass files are located.
 _GLASS_DIR = os.path.join(particle_load.__path__[0], "glass_files")
 
 
