@@ -115,12 +115,14 @@ def _save_particle_load_as_binary(
     f.close()
 
 
-def _load_balance(coords_x, coords_y, coords_z, masses):
+def _load_balance(ntot, coords_x, coords_y, coords_z, masses, max_particles_per_ic_file):
     """
     Load balance arrays between cores.
 
     Parameters
     ----------
+    ntot : int
+        Total number of particles
     coords_x : ndarray float[n_tot,]
         x-Coordinates
     coords_y : ndarray float[n_tot,]
@@ -129,6 +131,8 @@ def _load_balance(coords_x, coords_y, coords_z, masses):
         z-coordinates
     masses : ndarray float[n_tot,]
         Particle masses
+    max_particles_per_ic_file : int
+        Max number of particles we want per core
 
     Returns
     -------
@@ -139,15 +143,15 @@ def _load_balance(coords_x, coords_y, coords_z, masses):
     ndesired[:] = ntot / mympi.comm_size
     ndesired[-1] += ntot - sum(ndesired)
     if mympi.comm_rank == 0:
-        tmp_num_per_file = ndesired[0] ** (1 / 3.0)
+        tmp_num_per_file = ndesired[-1] ** (1 / 3.0)
         print(
-            "Load balancing %i particles on %i ranks (%.2f**3 per file)..."
+            "Load balancing %i particles on %i ranks (max %.2f**3 per file)..."
             % (ntot, mympi.comm_size, tmp_num_per_file)
         )
-        if tmp_num_per_file > pl_params.max_particles_per_ic_file ** (1 / 3.0):
+        if tmp_num_per_file > max_particles_per_ic_file ** (1 / 3.0):
             print(
                 "***WARNING*** more than %s per file***"
-                % (pl_params.max_particles_per_ic_file)
+                % (max_particles_per_ic_file)
             )
 
     masses = repartition(masses, ndesired, mympi.comm, mympi.comm_rank, mympi.comm_size)
@@ -196,7 +200,7 @@ def save_pl(coords_x, coords_y, coords_z, masses, pl_params):
     # Load balance arrays across cores.
     if mympi.comm_size > 1:
         coords_x, coords_y, coords_z, masses = _load_balance(
-            coords_x, coords_y, coords_z, masses
+            ntot, coords_x, coords_y, coords_z, masses, pl_params.max_particles_per_ic_file
         )
 
     assert (

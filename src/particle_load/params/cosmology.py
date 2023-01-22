@@ -89,7 +89,6 @@ def compute_softening(pl_params):
     # What softening rules to use?
     if pl_params.softening_rules == "flamingo":
         # Flamingo.
-        raise NotImplementedError
         comoving_ratio = 1 / 25.0
         physical_ratio = 1 / 100.0  # Transition at z=3.
     elif pl_params.softening_rules == "eagle-xl":
@@ -115,18 +114,16 @@ def compute_softening(pl_params):
     pl_params.eps_dm_physical = mean_inter * physical_ratio
 
     # Baryon softening lengths.
-    if pl_params.softening_rules == "flamingo":
-        pl_params.eps_baryon = pl_paramseps_dm
-        pl_params.eps_baryon_physical = pl_params.eps_dm_physical
-    elif pl_params.softening_rules == "eagle-xl":
-        fac = ((pl_params.Omega0 - pl_params.OmegaBaryon) / pl_params.OmegaBaryon) ** (
-            1.0 / 3
-        )
-        pl_params.eps_baryon = pl_params.eps_dm / fac
-        pl_params.eps_baryon_physical = pl_params.eps_dm_physical / fac
-    elif pl_params.softening_rules == "eagle":
+    if pl_params.softening_rules in ["eagle", "flamingo"]:
         pl_params.eps_baryon = pl_params.eps_dm
         pl_params.eps_baryon_physical = pl_params.eps_dm_physical
+    elif pl_params.softening_rules == "eagle-xl":
+        raise NotImplementedError
+        #fac = ((pl_params.Omega0 - pl_params.OmegaBaryon) / pl_params.OmegaBaryon) ** (
+        #    1.0 / 3
+        #)
+        #pl_params.eps_baryon = pl_params.eps_dm / fac
+        #pl_params.eps_baryon_physical = pl_params.eps_dm_physical / fac
 
     print(
         "Comoving Softenings: DM=%.6f Baryons=%.6f Mpc/h"

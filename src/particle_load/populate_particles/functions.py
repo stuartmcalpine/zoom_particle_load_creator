@@ -35,9 +35,9 @@ def com(coords_x, coords_y, coords_z, masses):
 
     if mympi.comm_size > 1:
         return (
-            mympi.comm.reduce(com_x),
-            mympi.comm.reduce(com_y),
-            mympi.comm.reduce(com_z),
+            mympi.comm.allreduce(com_x),
+            mympi.comm.allreduce(com_y),
+            mympi.comm.allreduce(com_z),
         )
     else:
         return com_x, com_y, com_z
