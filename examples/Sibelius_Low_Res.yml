@@ -24,7 +24,7 @@ softening_rules: "eagle"
 
 # Template for param files
 ic_gen_template_set: "v8"
-swift_template_set: "sibelius"
+swift_template_set: "dmo"
 
 # For IC gen param file
 ic_gen_exec:        "/path/to/IC_Gen.x"
@@ -34,8 +34,7 @@ n_species:          2
 use_ph_ids:         True
 
 # For Swift param file
-swift_exec: swift
-swift_ic_dir_loc:   "/path/to/swift_ic_d_dir/"
+swift_exec: /path/to/swift
 
 # Descriptors for PANPHASIA
 panphasian_descriptor: "[Panph1,L18,(12371,40578,79587),S15,CH1008830052,Desc_x000_y024_z943]"

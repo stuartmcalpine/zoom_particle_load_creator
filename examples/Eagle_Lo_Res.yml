@@ -34,8 +34,7 @@ n_species:          2
 use_ph_ids:         True
 
 # For Swift param file
-swift_exec: swift
-swift_ic_dir_loc:   "/path/to/swift_ic_d_dir/"
+swift_exec: /path/to/swift
 
 # Descriptors for PANPHASIA
 panphasian_descriptor: "[Panph1,L16,(31250,23438,39063),S12,CH1050187043,EAGLE_L0100_VOL1]"
