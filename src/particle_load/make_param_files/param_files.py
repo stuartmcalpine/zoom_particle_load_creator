@@ -77,7 +77,6 @@ def build_param_dict(pl_params, high_res_region):
         "nbit",
         "fft_times_fac",
         "ndim_fft",
-        "swift_ic_dir_loc",
         "softening_ratio_background",
         "ic_gen_template_set",
         "ic_gen_exec",

@@ -121,20 +121,19 @@ def make_swift_param_files(params):
     if not os.path.exists(os.path.join(swift_dir, "snapshots/")):
         os.makedirs(os.path.join(swift_dir, "snapshots/"))
 
-    # Copy over stf times.
-    f = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/stf_times_a.txt"
-    if os.path.isfile(f):
-        subprocess.call(f"cp {f} {swift_dir}", shell=True)
-
     # Copy over snapshot times.
+    params["swift_has_snap_times"] = 0
     f = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/snapshot_times.txt"
     if os.path.isfile(f):
         subprocess.call(f"cp {f} {swift_dir}", shell=True)
+        params["swift_has_snap_times"] = 1
 
     # Copy over select output.
+    params["swift_has_select_output"] = 0
     f = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/select_output.yml"
     if os.path.isfile(f):
         subprocess.call(f"cp {f} {swift_dir}", shell=True)
+        params["swift_has_select_output"] = 1
 
     # Make submit files.
     _make_submit_file_swift(swift_dir, params)

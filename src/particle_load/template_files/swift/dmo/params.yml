@@ -18,7 +18,7 @@ Cosmology:
 # Parameters governing the time integration
 TimeIntegration:
   dt_min:     1e-6 
-  dt_max:     0.01
+  dt_max:     1e-2
 
 Scheduler:
   max_top_level_cells: 32
@@ -26,14 +26,14 @@ Scheduler:
 
 # Parameters governing the snapshots
 Snapshots:
-  basename:            $f_name
+  basename:            snap
   delta_time:          1.02
   scale_factor_first:  0.02
-  output_list_on:      1
-  output_list:         ./snap_redshifts.txt
-  invoke_stf:          0
-  compression:         9
+  output_list_on:      $swift_has_snap_times
+  output_list:         snapshot_times.txt
   subdir:              snapshots 
+  select_output_on:    $swift_has_select_output
+  select_output:       select_output.yml
 
 # Parameters governing the conserved quantities statistics
 Statistics:
@@ -63,19 +63,10 @@ Gravity:
   MAC:                              adaptive
   theta_cr:                         0.7
   epsilon_fmm:                      0.001
-  allow_truncation_in_MAC:          1
-  use_tree_below_softening:         1
 
 # Parameters related to the initial conditions
 InitialConditions:
-  file_name:                   $swift_ic_dir_loc/$f_name.hdf5
+  file_name:                   ics.hdf5
   periodic:                    1
   cleanup_h_factors:           1    
   cleanup_velocity_factors:    1  
-
-StructureFinding:
-  config_file_name:         none
-  basename:                 stf
-  output_list_on:           0
-  output_list:              list.txt
-  subdir_per_output:        stf

@@ -163,7 +163,6 @@ class ParticleLoadParams:
 
         # Want to make SWIFT files, have we said the path?
         if self.make_swift_param_files:
-            assert hasattr(self, "swift_ic_dir_loc")
             assert hasattr(self, "swift_template_set")
             assert hasattr(self, "swift_exec")
 
