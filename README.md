@@ -42,8 +42,6 @@ the git directory:
 
 which will install `zoom-particle-load-creator` and any dependencies.
 
-As a final step, compile the `Cython` dependencies. Goto `./src/particle_load/cython/` and run `cythonize -i MakeGrid.pyx`.
-
 ### MPI installation for `read_swift`
 
 If you are using `read_swift` and want to load large snapshots over MPI collectively

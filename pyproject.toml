@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools >= 61.0", "Cython"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -33,3 +33,6 @@ where = ["src"]
 
 [project.scripts]
 zoom-particle-load-creator = "particle_load.scripts.generate_particle_load:main"
+
+[tool.setuptools.package-data]
+particle_load = ["./glass_files/ascii_glass*"]
