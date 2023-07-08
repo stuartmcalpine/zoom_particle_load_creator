@@ -48,8 +48,7 @@ def _make_param_file_ics(ic_gen_dir, params):
     """
 
     template = (
-        f"{_TEMPLATE_DIR}/ic_gen/{params['ic_gen_template_set']}/"
-        f"params_{params['num_constraint_files']}_con.inp"
+        f"{_TEMPLATE_DIR}/ic_gen/{params['ic_gen_template_set']}/params.inp"
     )
 
     # Is this a zoom simulation (zoom can't use 2LPT)?
@@ -71,6 +70,14 @@ def _make_param_file_ics(ic_gen_dir, params):
 
     # Cube of neff
     params["high_res_n_eff_cube"] = round(params["high_res_n_eff"] ** (1.0 / 3))
+
+    # Constraint files
+    s = "#-------------- List constraint phase descriptors and (newline) file path, and levels to use"
+    for i in range(params["num_constraint_files"]):
+        s += f"\n{params[f'constraint_phase_descriptor_{i+1}']}"
+        s += f"\n'{params[f'constraint_phase_descriptor_path_{i+1}']}'"
+        s += f"\n{params[f'constraint_phase_descriptor_levels_{i+1}']}"
+    params["constraint_files"] = s
 
     # Replace template values.
     with open(template, "r") as f:

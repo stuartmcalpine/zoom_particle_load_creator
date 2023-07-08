@@ -23,7 +23,7 @@ dependencies = [
     "matplotlib",
     "scipy"
 ]
-version = "0.0.1"
+version = "0.0.2"
 authors = [
   { name="Stuart McAlpine", email="stuart.mcalpine@fysik.su.se" },
 ]
@@ -35,4 +35,5 @@ where = ["src"]
 zoom-particle-load-creator = "particle_load.scripts.generate_particle_load:main"
 
 [tool.setuptools.package-data]
-particle_load = ["./glass_files/ascii_glass*"]
+"particle_load.glass_files" = ["ascii_glass*"]
+"particle_load.template_files" = ["*", "*/**"]

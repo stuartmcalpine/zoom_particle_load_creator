@@ -153,8 +153,8 @@ class ParticleLoadParams:
         if self.num_constraint_files > 0:
             for i in range(self.num_constraint_files):
                 assert hasattr(self, f"constraint_phase_descriptor_{i+1}")
-                assert hasattr(self, f"constraint_phase_descriptor_{i+1}_path")
-                assert hasattr(self, f"constraint_phase_descriptor_{i+1}_levels")
+                assert hasattr(self, f"constraint_phase_descriptor_path_{i+1}")
+                assert hasattr(self, f"constraint_phase_descriptor_levels_{i+1}")
 
         # Want to make ic files, have we said the path?
         if self.make_ic_gen_param_files:

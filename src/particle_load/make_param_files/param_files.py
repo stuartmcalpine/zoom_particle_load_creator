@@ -114,11 +114,11 @@ def build_param_dict(pl_params, high_res_region):
         param_dict[f"constraint_phase_descriptor_{i+1}"] = getattr(
             pl_params, f"constraint_phase_descriptor_{i+1}"
         )
-        param_dict[f"constraint_phase_descriptor_{i+1}_path"] = getattr(
-            pl_params, f"constraint_phase_descriptor_{i+1}_path"
+        param_dict[f"constraint_phase_descriptor_path_{i+1}"] = getattr(
+            pl_params, f"constraint_phase_descriptor_path_{i+1}"
         )
-        param_dict[f"constraint_phase_descriptor_{i+1}_levels"] = getattr(
-            pl_params, f"constraint_phase_descriptor_{i+1}_levels"
+        param_dict[f"constraint_phase_descriptor_levels_{i+1}"] = getattr(
+            pl_params, f"constraint_phase_descriptor_levels_{i+1}"
         )
 
     # Number of particles types.
