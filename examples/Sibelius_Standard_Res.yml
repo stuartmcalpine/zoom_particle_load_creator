@@ -28,7 +28,6 @@ swift_template_set: "dmo"
 
 # For IC gen param file
 ic_gen_exec:        "/path/to/IC_Gen.x"
-ndim_fft_start:     15
 multigrid_ics:      True
 n_species:          2
 use_ph_ids:         True

@@ -69,7 +69,6 @@ class ParticleLoadParams:
             "glass_num",
             "save_dir",
             "panphasian_descriptor",
-            "ndim_fft_start",
             "is_zoom",
             "Omega0",
             "OmegaCDM",
@@ -273,3 +272,11 @@ class ParticleLoadParams:
         self.size_glass_cell_mpch = np.true_divide(
             self.box_size, self.nL_glass_cells_whole_volume
         )
+
+        # Extract ndim_fft_start from the descriptor
+        tmp = self.panphasian_descriptor.split(",")[5]
+        assert "S" in tmp
+        self.ndim_fft_start = int(tmp.split("S")[1])
+        print(self.ndim_fft_start)
+        exit()
+

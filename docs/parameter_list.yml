@@ -25,9 +25,6 @@ save_dir: /where/to/save/
 # Panphasian descriptor for ic_gen
 panphasian_descriptor: " [Panph1,L16,(31250,23438,39063),S12,CH1050187043,EAGLE_L0100_VOL1]"
 
-# Starting level in the Panphasia descriptor (number after the S)
-ndim_fft_start: 12
-
 # Is this a zoom simulation?
 is_zoom: False
 
