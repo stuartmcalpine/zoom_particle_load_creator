@@ -53,5 +53,5 @@ jobs:
 
       # Run tests
       - name: Run tests
-      run: |
+        run: |
           zoom-particle-load-creator -IC -S -PL Eagle_100_FullBox.yml
