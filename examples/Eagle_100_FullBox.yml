@@ -1,5 +1,5 @@
 # Filename
-save_dir:           "." #"/path/to/savedir/"
+save_dir:           "/path/to/savedir/"
 
 # Resolution (EAGLE standard res)
 box_size:           67.77          
