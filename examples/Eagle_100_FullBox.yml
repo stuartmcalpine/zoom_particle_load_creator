@@ -23,7 +23,7 @@ linear_ps: "/path/to/extended_planck_linear_powspec"
 softening_rules: "eagle"
 
 # Template for param files
-swift_template_set: "eagle"
+swift_template_set: "dmo"
 
 # For IC gen param file
 ic_gen_exec:        "/path/to/IC_Gen.x"
