@@ -20,7 +20,7 @@ Sigma8: 0.8288
 linear_ps: "/path/to/extended_planck_linear_powspec"
 
 # Softening rules to use.
-softening_rules: "flamingo"
+softening_rules: "eagle"
 
 # Template for param files
 swift_template_set: "dmo"
