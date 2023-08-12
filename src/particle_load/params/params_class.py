@@ -157,7 +157,6 @@ class ParticleLoadParams:
 
         # Want to make ic files, have we said the path?
         if self.make_ic_gen_param_files:
-            assert hasattr(self, "ic_gen_template_set")
             assert hasattr(self, "ic_gen_exec")
 
         # Want to make SWIFT files, have we said the path?

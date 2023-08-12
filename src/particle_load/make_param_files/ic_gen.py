@@ -19,7 +19,7 @@ def _make_submit_file_ics(ic_gen_dir, params):
         The parameters to go into the template
     """
 
-    template = f"{_TEMPLATE_DIR}/ic_gen/{params['ic_gen_template_set']}/submit"
+    template = f"{_TEMPLATE_DIR}/ic_gen/submit"
 
     # Replace template values.
     with open(template, "r") as f:
@@ -48,7 +48,7 @@ def _make_param_file_ics(ic_gen_dir, params):
     """
 
     template = (
-        f"{_TEMPLATE_DIR}/ic_gen/{params['ic_gen_template_set']}/params.inp"
+        f"{_TEMPLATE_DIR}/ic_gen/params.inp"
     )
 
     # Is this a zoom simulation (zoom can't use 2LPT)?
