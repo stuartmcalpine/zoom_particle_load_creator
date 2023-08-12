@@ -105,14 +105,6 @@ def make_swift_param_files(params):
     assert os.path.isfile(f)
     subprocess.call(f"cp {f} {swift_dir}", shell=True)
 
-    # Copy over select output.
-    params["swift_has_select_output"] = 0
-    f = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/select_output.yml"
-    assert os.path.isfile(f)
-    if os.path.isfile(f):
-        subprocess.call(f"cp {f} {swift_dir}", shell=True)
-        params["swift_has_select_output"] = 1
-
     # Make submit files.
     _make_submit_file_swift(swift_dir, params)
     print("Saved swift submit file")
