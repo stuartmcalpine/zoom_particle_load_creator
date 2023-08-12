@@ -67,27 +67,6 @@ def _make_param_file_swift(swift_dir, params):
     params["starting_a"] = 1.0 / (1 + float(params["starting_z"]))
     params["finishing_a"] = 1.0 / (1 + float(params["finishing_z"]))
 
-    # Replace values.
-    # if (
-    #    "sibelius" in params["template_set"].lower()
-    #    or params["template_set"].lower() == "manticore"
-    # ):
-    #
-    # elif params["template_set"].lower() == "eaglexl":
-    #    raise Exception("Fix this one")
-    #    # split_mass = gas_particle_mass / 10**10. * 4.
-    #    # r = [fname, '%.5f'%h, '%.8f'%starting_a, '%.8f'%finishing_a, '%.8f'%omega0, '%.8f'%omegaL,
-    #    #'%.8f'%omegaB, fname, '%.8f'%(eps_dm/h),
-    #    #'%.8f'%(eps_baryon/h), '%.8f'%(eps_dm_physical/h),
-    #    #'%.8f'%(eps_baryon_physical/h), '%.3f'%(softening_ratio_background),
-    #    #'%.8f'%split_mass, ic_dir, fname]
-    # else:
-    #    raise ValueError("Invalid template set")
-
-    # Some extra params to compute.
-    if params["swift_template_set"].lower() == "sibelius_flamingo":
-        params["split_mass"] = params["gas_particle_mass"] / 10**10.0 * 4.0
-
     template = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/params.yml"
 
     # Replace template values.
@@ -122,18 +101,9 @@ def make_swift_param_files(params):
         os.makedirs(os.path.join(swift_dir, "snapshots/"))
 
     # Copy over snapshot times.
-    params["swift_has_snap_times"] = 0
     f = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/snapshot_times.txt"
-    if os.path.isfile(f):
-        subprocess.call(f"cp {f} {swift_dir}", shell=True)
-        params["swift_has_snap_times"] = 1
-
-    # Copy over select output.
-    params["swift_has_select_output"] = 0
-    f = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/select_output.yml"
-    if os.path.isfile(f):
-        subprocess.call(f"cp {f} {swift_dir}", shell=True)
-        params["swift_has_select_output"] = 1
+    assert os.path.isfile(f)
+    subprocess.call(f"cp {f} {swift_dir}", shell=True)
 
     # Make submit files.
     _make_submit_file_swift(swift_dir, params)

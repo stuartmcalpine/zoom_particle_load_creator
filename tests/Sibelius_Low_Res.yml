@@ -1,5 +1,5 @@
 # Filename
-save_dir:           "/path/to/savedir/"
+save_dir:           "sibelius_lo_test"
 
 # Resolution (8x lower than EAGLE standard res)
 box_size:           677.7          
@@ -8,7 +8,7 @@ glass_num:          512
 
 # Params for zoom simulation
 is_zoom:            True           
-mask_file:          "/path/to/mymask.hdf5"
+mask_file:          "Sibelius_5Mpc.hdf5"
 
 # Cosmology
 Omega0: 0.307

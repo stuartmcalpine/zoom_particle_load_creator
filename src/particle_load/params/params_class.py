@@ -64,12 +64,11 @@ class ParticleLoadParams:
 
         # These must be in the parameter file, others are optional.
         self.required_params = [
+            "glass_num",
             "box_size",
             "n_particles",
-            "glass_num",
             "save_dir",
             "panphasian_descriptor",
-            "ndim_fft_start",
             "is_zoom",
             "Omega0",
             "OmegaCDM",
@@ -158,7 +157,6 @@ class ParticleLoadParams:
 
         # Want to make ic files, have we said the path?
         if self.make_ic_gen_param_files:
-            assert hasattr(self, "ic_gen_template_set")
             assert hasattr(self, "ic_gen_exec")
 
         # Want to make SWIFT files, have we said the path?
@@ -168,16 +166,12 @@ class ParticleLoadParams:
 
         # For non-zoom simulations.
         if self.is_zoom == False:
-            assert self.n_species == 1, "Must be 1, not a zoom"
             assert self.multigrid_ics == 0, "Must be 0, not a zoom"
             assert hasattr(self, f"glass_file_loc")
 
         # If selecting a mask file, make sure its a zoom simulation.
         if self.mask_file is not None:
             assert self.is_zoom, "Mask file must use is_zoom"
-
-        # Can't have more than 2 species.
-        assert self.n_species >= 1 and self.n_species <= 2
 
     def _set_cosmology(self):
         """Set cosmological params."""
@@ -240,7 +234,7 @@ class ParticleLoadParams:
         self._add_default_value("grid_also_glass", True)
         self._add_default_value("softening_ratio_background", 0.02)
         self._add_default_value("ncores_node", 28)
-        
+
         # to doc
         self._add_default_value("is_slab", False)
         self._add_default_value("n_nodes_swift", 1)
@@ -264,7 +258,8 @@ class ParticleLoadParams:
     def _compute_numbers(self):
         """Some computations based on parameter file."""
 
-        # (Cube root of) how many glass cells would fill the whole simulation volume.
+        # (Cube root of) how many glass cells would fill the whole simulation
+        # volume.
         self.nL_glass_cells_whole_volume = int(
             np.rint((self.n_particles / self.glass_num) ** (1 / 3.0))
         )
@@ -273,3 +268,14 @@ class ParticleLoadParams:
         self.size_glass_cell_mpch = np.true_divide(
             self.box_size, self.nL_glass_cells_whole_volume
         )
+
+        # Extract ndim_fft_start from the descriptor
+        tmp = self.panphasian_descriptor.split(",")[5]
+        assert "S" in tmp
+        self.ndim_fft_start = int(tmp.split("S")[1])
+
+        # Number of particle species
+        if self.is_zoom:
+            self.n_species = 2
+        else:
+            self.n_species = 1

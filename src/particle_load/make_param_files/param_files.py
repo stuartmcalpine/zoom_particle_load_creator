@@ -81,7 +81,6 @@ def build_param_dict(pl_params, high_res_region):
         "fft_times_fac",
         "ndim_fft",
         "softening_ratio_background",
-        "ic_gen_template_set",
         "ic_gen_exec",
         "swift_template_set",
         "swift_exec",

@@ -17,7 +17,7 @@ Cosmology:
   
 # Parameters governing the time integration
 TimeIntegration:
-  dt_min:     1e-6 
+  dt_min:     1e-10 
   dt_max:     1e-2
 
 Scheduler:
@@ -27,31 +27,21 @@ Scheduler:
 # Parameters governing the snapshots
 Snapshots:
   basename:            snap
-  delta_time:          1.02
-  scale_factor_first:  0.02
-  output_list_on:      $swift_has_snap_times
+  output_list_on:      1
   output_list:         snapshot_times.txt
   subdir:              snapshots 
-  select_output_on:    $swift_has_select_output
-  select_output:       select_output.yml
 
 # Parameters governing the conserved quantities statistics
 Statistics:
-  delta_time:          1.02
-  scale_factor_first:  0.02
+  delta_time:           1.01
+  scale_factor_first:   0.03126
  
-# Restart files.
+# Restart files.    
 Restarts:
-  enable:             1
-  save:               1          # Keep copies
   onexit:             1
-  subdir:             restart    # Sub-directory of the directory where SWIFT is run
-  basename:           swift
   delta_hours:        4.0
-  stop_steps:         100
+  stop_steps:         25
   max_run_time:       71.5       # In hours
-  resubmit_on_exit:   1
-  resubmit_command:   ./auto_resubmit
 
 # Parameters for the self-gravity scheme
 Gravity:
@@ -69,4 +59,10 @@ InitialConditions:
   file_name:                   ics.hdf5
   periodic:                    1
   cleanup_h_factors:           1    
-  cleanup_velocity_factors:    1  
+  cleanup_velocity_factors:    1
+
+FOF:
+  basename:                     FOF
+  min_group_size:               32
+  linking_length_ratio:         0.2
+  seed_black_holes_enabled:     0

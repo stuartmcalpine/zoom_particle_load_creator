@@ -1,14 +1,14 @@
 # Filename
-save_dir:           "/path/to/savedir/"
+save_dir:           "eagle_100_test"
 
-# Resolution (EAGLE low res, standard res / 8)
+# Resolution (EAGLE standard res)
 box_size:           67.77          
-n_particles:        425259008
-glass_num:          512           
+n_particles:        3402072064
+is_zoom:            False 
 
-# Params for zoom simulation
-is_zoom:            True           
-mask_file:          "/path/to/mymask.hdf5"
+# Location of (fortran) glass file
+glass_file_loc: "fortran_glass_4096"
+glass_num: 4096
 
 # Cosmology
 Omega0: 0.307
@@ -27,7 +27,6 @@ swift_template_set: "dmo"
 
 # For IC gen param file
 ic_gen_exec:        "/path/to/IC_Gen.x"
-multigrid_ics:      True
 use_ph_ids:         True
 
 # For Swift param file

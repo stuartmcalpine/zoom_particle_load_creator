@@ -23,14 +23,11 @@ linear_ps: "/path/to/extended_planck_linear_powspec"
 softening_rules: "eagle"
 
 # Template for param files
-ic_gen_template_set: "v8"
 swift_template_set: "dmo"
 
 # For IC gen param file
 ic_gen_exec:        "/path/to/IC_Gen.x"
-ndim_fft_start:     15
 multigrid_ics:      True
-n_species:          2
 use_ph_ids:         True
 
 # For Swift param file
@@ -43,9 +40,9 @@ panphasian_descriptor: "[Panph1,L18,(12371,40578,79587),S15,CH1008830052,Desc_x0
 num_constraint_files: 2
 
 constraint_phase_descriptor_1: "[Phases,L18,(0,0,0),S15,9350_Sib_1000Mpc]"
-constraint_phase_descriptor_1_path: "/cosma7/data/dp004/rttw52/Octree_phases/"
-constraint_phase_descriptor_1_levels: '18 20'
+constraint_phase_descriptor_path_1: "/cosma7/data/dp004/rttw52/Octree_phases/"
+constraint_phase_descriptor_levels_1: '18 20'
 
 constraint_phase_descriptor_2: "[Phases,L24,(457,457,457),S46,Sib_9350_dual_24943_23_24_1213_r16]"
-constraint_phase_descriptor_2_path: "/cosma7/data/dp004/rttw52/Octree_phases/"
-constraint_phase_descriptor_2_levels: '23 24'
+constraint_phase_descriptor_path_2: "/cosma7/data/dp004/rttw52/Octree_phases/"
+constraint_phase_descriptor_levels_2: '23 24'
