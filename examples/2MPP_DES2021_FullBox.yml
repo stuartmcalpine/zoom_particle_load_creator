@@ -1,0 +1,36 @@
+# Filename
+save_dir:           "." #"/path/to/savedir/"
+
+# Resolution (EAGLE standard res)
+box_size:           681.0          
+n_particles:        134217728
+is_zoom:            False 
+
+# Location of (fortran) glass file
+glass_file_loc: "/cosma7/data/dp004/rttw52/particle_loads/glass_files/fortran_glass_4096"
+glass_num: 4096
+
+# Cosmology
+Omega0: 0.306
+OmegaCDM: 0.25740
+OmegaLambda: 0.694
+OmegaBaryon: 0.0486
+HubbleParam: 0.681
+Sigma8: 0.807
+linear_ps: "/cosma7/data/dp004/rttw52/particle_loads/power_spectrum/des2021_noNu"
+
+# Softening rules to use.
+softening_rules: "flamingo"
+
+# Template for param files
+swift_template_set: "dmo"
+
+# For IC gen param file
+ic_gen_exec:        "/cosma7/data/dp004/rttw52/codes/ic_gen_v8.4/build/IC_Gen.x"
+use_ph_ids:         True
+
+# For Swift param file
+swift_exec: "/cosma7/data/dp004/rttw52/manticore/resimulations/SWIFT/swift_mpi"
+
+# Descriptors for PANPHASIA
+panphasian_descriptor: "[Panph1,L15,(12270,7640,6331),S1,CH843975497,2MPP_ONLY]"

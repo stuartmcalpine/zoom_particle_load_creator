@@ -50,3 +50,8 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install .
+
+      # Run tests
+      - name: Run tests
+      run: |
+          zoom-particle-load-creator -IC -S -PL Eagle_100_FullBox.yml
