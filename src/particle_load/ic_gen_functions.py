@@ -108,6 +108,7 @@ def _compute_optimal_ic_mem(ndim_fft, all_ntot, pl_params):
     total_cores = total_memory / pl_params.mem_per_core
 
     # Print optimal values.
+    print(f"mem_per_core={pl_params.mem_per_core} ncores_node={pl_params.ncores_node}") 
     print("[Optimal] nmaxpart= %i nmaxdisp= %i" % (nmaxpart, nmaxdisp))
 
     # How many cores needed for optimal setup?
