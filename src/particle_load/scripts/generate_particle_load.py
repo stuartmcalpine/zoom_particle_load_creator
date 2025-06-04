@@ -108,17 +108,21 @@ def main():
             populate_all_particles(high_res_region, low_res_region, params)
 
     # Generate particle load for uniform volume.
-    # else:
-    #    high_res_region = None
-    #    low_res_region = None
-    #
-    #    # Total number of particles in particle load.
-    #    n_tot = pl_params.n_particles
-    #
-    #    # Compute FFT size.
-    #    mympi.print_section_header("FFT stats")
-    #    if mympi.comm_rank == 0:
-    #        compute_fft_stats(None, n_tot, pl_params)
+    else:
+        #high_res_region = None
+        #low_res_region = None
+    
+        ## Total number of particles in particle load.
+        #n_tot = params["parent"]["n_particles"]
+    
+        ## Compute FFT size.
+        #mympi.print_section_header("FFT stats")
+        #if mympi.comm_rank == 0:
+        #    compute_fft_stats(None, n_tot, params)
+
+        # Not implemented yet
+        return
+
 
     # Print total number of particles in particle load.
     print_stats(high_res_region, low_res_region, params, n_tot)
