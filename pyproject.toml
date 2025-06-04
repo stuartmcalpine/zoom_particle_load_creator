@@ -21,7 +21,8 @@ dependencies = [
     "mpi4py",
     "astropy",
     "matplotlib",
-    "scipy"
+    "scipy",
+    "toml",
 ]
 version = "0.0.2"
 authors = [
