@@ -12,52 +12,30 @@ from .plot import plot_high_res_region
 
 
 class HighResolutionRegion:
-    def __init__(self, pl_params):
+    def __init__(self, params):
         """
         Class that stores the information about the high-res grid generated
         using the HDF5 mask file.
 
         Parameters
         ----------
-        pl_params : ParticleLoadParams
-            Stores the parameters of the run
-
-        Attributes
-        ----------
-        nL_cells : ndarray - int[1,3]
-            Cube root of number of cells in high-res grid (includes buffer)
-        size_mpch : ndarray - float[1,3]
-            Dimensions of the high-res grid in Mpc/h
-        volume_mpch3 : float
-            Total volume of the high-res grid in (Mpc/h)**3
-        ntot_cells : int
-            Total number of high-res grid cells
-        offsets : ndarray int[N,3]
-            Offset positions of the cells in the high-res grid
-        cell_nos : ndarray int[N,3]
-            Unique cell IDs of the cells in the high-res grid
-        cell_types : ndarray int[N,3]
-            Cell type of the cells in the high-res grid
-        cell_info : dict
-            For each cell type, stores the information for that type
-            (ie particle mass going into them, num particles etc).
-
+        params : dict
         """
 
         # Compute dimensions of the high-res region (in units of glass cells).
-        self._set_initial_dimensions(pl_params)
+        self._set_initial_dimensions(params)
 
         # Generate the high resolution grid.
-        self._init_high_res_region(pl_params)
+        self._init_high_res_region(params)
 
         # Count up the high resolution particles.
-        self._count_high_res_particles(pl_params)
+        self._count_high_res_particles(params)
 
         # Plot the high res grid.
-        if pl_params.make_extra_plots:
-            plot_high_res_region(pl_params, self.offsets, self.cell_types)
+        if params["zoom"]["to_plot"]:
+            plot_high_res_region(params, self.offsets, self.cell_types)
 
-    def _set_initial_dimensions(self, pl_params):
+    def _set_initial_dimensions(self, params):
         """
         Compute how many target resolution glass cells are needed to fill the
         bounding box of the loaded mask as a cubic grid.
@@ -67,25 +45,23 @@ class HighResolutionRegion:
 
         Parameters
         ----------
-        pl_params : ParticleLoadParams
-            Stores the parameters of the run
+        params : dict
         """
 
         # (Cube root of) number of glass cells needed to fill the high-res region.
         self.nL_cells = np.tile(
             int(
                 np.ceil(
-                    pl_params.high_res_region_mask.bounding_length
-                    / pl_params.size_glass_cell_mpch
+                    params["zoom"]["bounding_length"] / params["glass_file"]["L_mpch"]
                 )
             ),
             3,
         )
 
         # Want a buffer between glass cells and low-res outer shells?
-        self.nL_cells += pl_params.glass_buffer_cells * 2
+        self.nL_cells += params["zoom"]["glass_buffer_cells"] * 2
         assert np.all(
-            self.nL_cells < pl_params.nL_glass_cells_whole_volume
+            self.nL_cells < params["parent"]["N_glass_L"]
         ), "To many cells in high-res region"
 
         # Make sure slabs do the whole box in 2 dimensions.
@@ -124,9 +100,9 @@ class HighResolutionRegion:
 
         # Size of high resolution region in Mpc/h.
         self.size_mpch = [
-            pl_params.size_glass_cell_mpch * float(self.nL_cells[0]),
-            pl_params.size_glass_cell_mpch * float(self.nL_cells[1]),
-            pl_params.size_glass_cell_mpch * float(self.nL_cells[2]),
+            params["glass_file"]["L_mpch"] * float(self.nL_cells[0]),
+            params["glass_file"]["L_mpch"] * float(self.nL_cells[1]),
+            params["glass_file"]["L_mpch"] * float(self.nL_cells[2]),
         ]
 
         # Volume of high resolution region in (Mpc/h)**3
@@ -140,7 +116,7 @@ class HighResolutionRegion:
         mympi.message(f"{self.nL_cells} ({self.ntot_cells}) cells in high-res grid")
         mympi.message(f"Dims of high-res grid: {self.size_mpch} Mpc/h")
 
-    def _compute_offsets(self, pl_params):
+    def _compute_offsets(self, params):
         """
         Generate the positions of each cell in the high-res region grid.
 
@@ -148,8 +124,7 @@ class HighResolutionRegion:
 
         Parameters
         ----------
-        pl_params : ParticleLoadParams
-            Stores the parameters of the run
+        params : dict
 
         Returns
         -------
@@ -165,7 +140,7 @@ class HighResolutionRegion:
         this_num_cells = self.ntot_cells // mympi.comm_size
         if mympi.comm_rank < (self.ntot_cells) % mympi.comm_size:
             this_num_cells += 1
-        if pl_params.verbose:
+        if params["system"]["verbose"]:
             print(f"Rank {mympi.comm_rank} gets {this_num_cells} cells.")
 
         # Get offsets and cell_nos for high-res cells on this core.
@@ -272,14 +247,13 @@ class HighResolutionRegion:
         if mympi.comm_rank == 0:
             print("added %i skins." % count)
 
-    def _count_high_res_particles(self, pl_params):
+    def _count_high_res_particles(self, params):
         """
         Count total number of high-resolution particles there will be.
 
         Parameters
         ----------
-        pl_params : ParticleLoadParams
-            Stores the parameters of the run
+        params : dict
         """
 
         self.cell_info = {
@@ -306,22 +280,26 @@ class HighResolutionRegion:
 
             # Glass particles (type 0).
             if i == 0:
-                self.cell_info["num_particles_per_cell"].append(pl_params.glass_num)
-                this_tot_num_glass_particles += this_num_cells * pl_params.glass_num
+                self.cell_info["num_particles_per_cell"].append(
+                    params["glass_file"]["N"]
+                )
+                this_tot_num_glass_particles += (
+                    this_num_cells * params["glass_file"]["N"]
+                )
             # Grid particles (type > 0).
             else:
                 # Desired number of particles in this level of grid.
                 desired_no = np.maximum(
-                    pl_params.min_num_per_cell,
+                    params["zoom"]["min_num_per_cell"],
                     int(
                         np.ceil(
-                            pl_params.glass_num
-                            * np.true_divide(pl_params.skin_reduce_factor, i)
+                            params["glass_file"]["N"]
+                            * np.true_divide(params["zoom"]["skin_reduce_factor"], i)
                         )
                     ),
                 )
 
-                if pl_params.grid_also_glass:
+                if params["zoom"]["grid_also_glass"]:
                     # Find glass file with the closest number of particles.
                     num_in_grid_cell = find_nearest_glass_file(desired_no)
                 else:
@@ -335,10 +313,10 @@ class HighResolutionRegion:
             self.cell_info["particle_mass"].append(
                 (
                     (
-                        pl_params.size_glass_cell_mpch
+                        params["glass_file"]["L_mpch"]
                         / self.cell_info["num_particles_per_cell"][-1] ** (1 / 3.0)
                     )
-                    / pl_params.box_size
+                    / params["parent"]["box_size"]
                 )
                 ** 3.0
             )
@@ -354,7 +332,7 @@ class HighResolutionRegion:
         assert n_tot_cells_check == n_tot_cells, "Bad cell count"
 
         # The number of glass particles if they filled the high res grid.
-        self.n_tot_glass_part_equiv = pl_params.glass_num * n_tot_cells
+        self.n_tot_glass_part_equiv = params["glass_file"]["N"] * n_tot_cells
 
         # How many particles in the lowest mass resolution cells in the high res grid.
         num_lowest_res = np.min(self.cell_info["num_particles_per_cell"])
@@ -387,7 +365,7 @@ class HighResolutionRegion:
         for att in self.cell_info:
             mympi.message(f" - cell_info: {att}: {self.cell_info[att]}")
 
-    def _init_high_res_region(self, pl_params):
+    def _init_high_res_region(self, params):
         """
         Make the high resolution grid.
 
@@ -398,12 +376,11 @@ class HighResolutionRegion:
 
         Parameters
         ----------
-        pl_params : ParticleLoadParams
-            Stores the parameters of the run
+        params : dict
         """
 
         # Generate the grid layout.
-        self.offsets, self.cell_nos = self._compute_offsets(pl_params)
+        self.offsets, self.cell_nos = self._compute_offsets(params)
 
         # Holds the cell types (dictates what will fill them later).
         self.cell_types = (
@@ -414,12 +391,10 @@ class HighResolutionRegion:
         max_boxsize = np.max(self.size_mpch)  # Length of high-res region.
 
         # Using a mask file.
-        if pl_params.mask_file is not None:
+        if params["zoom"]["mask"] is not None:
             # Rescale mask coords into grid coords.
-            mask_cell_centers = pl_params.high_res_region_mask.coords / max_boxsize * L
-            mask_cell_width = (
-                pl_params.high_res_region_mask.grid_cell_width / max_boxsize * L
-            )
+            mask_cell_centers = params["zoom"]["mask_coordinates"] / max_boxsize * L
+            mask_cell_width = params["zoom"]["grid_cell_width"] / max_boxsize * L
             assert np.all(np.abs(mask_cell_centers) <= L / 2.0), "Mask coords error"
 
             # Find out which cells in our grid will be glass given the mask.

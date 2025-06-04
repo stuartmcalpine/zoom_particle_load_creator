@@ -21,21 +21,21 @@ def _make_submit_file_swift(swift_dir, params):
     """
 
     # Submit file
-    template = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/submit"
+    template = f"{_TEMPLATE_DIR}/swift/{params['swift']['swift_template_set']}/submit"
 
     with open(template, "r") as f:
         src = Template(f.read())
-        result = src.substitute(params)
+        result = src.substitute(params["swift"])
 
     with open("%s/submit" % (swift_dir), "w") as f:
         f.write(result)
 
     # Resubmit file
-    template = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/resubmit"
+    template = f"{_TEMPLATE_DIR}/swift/{params['swift']['swift_template_set']}/resubmit"
 
     with open(template, "r") as f:
         src = Template(f.read())
-        result = src.substitute(params)
+        result = src.substitute(params["swift"])
 
     with open("%s/resubmit" % (swift_dir), "w") as f:
         f.write(result)
@@ -64,15 +64,15 @@ def _make_param_file_swift(swift_dir, params):
     """
 
     # Starting and finishing scale factors.
-    params["starting_a"] = 1.0 / (1 + float(params["starting_z"]))
-    params["finishing_a"] = 1.0 / (1 + float(params["finishing_z"]))
+    params["swift"]["starting_a"] = 1.0 / (1 + float(params["swift"]["starting_z"]))
+    params["swift"]["finishing_a"] = 1.0 / (1 + float(params["swift"]["finishing_z"]))
 
-    template = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/params.yml"
+    template = f"{_TEMPLATE_DIR}/swift/{params['swift']['swift_template_set']}/params.yml"
 
     # Replace template values.
     with open(template, "r") as f:
         src = Template(f.read())
-        result = src.substitute(params)
+        result = src.substitute(params["swift"])
 
     # Write new param file.
     with open("%s/params.yml" % (swift_dir), "w") as f:
@@ -90,7 +90,7 @@ def make_swift_param_files(params):
     """
 
     # Make main swift folder if it doesn't exist.
-    swift_dir = os.path.join(params["save_dir"], "swift")
+    swift_dir = os.path.join(params["output"]["path"], "swift")
     if not os.path.exists(swift_dir):
         os.makedirs(swift_dir)
     if not os.path.exists(os.path.join(swift_dir, "out_files/")):
@@ -101,7 +101,8 @@ def make_swift_param_files(params):
         os.makedirs(os.path.join(swift_dir, "snapshots/"))
 
     # Copy over snapshot times.
-    f = f"{_TEMPLATE_DIR}/swift/{params['swift_template_set']}/snapshot_times.txt"
+    for tmpf in ["snap_times.txt", "select_output.yml"]:
+        f = f"{_TEMPLATE_DIR}/swift/{params['swift']['swift_template_set']}/{tmpf}"
     assert os.path.isfile(f)
     subprocess.call(f"cp {f} {swift_dir}", shell=True)
 

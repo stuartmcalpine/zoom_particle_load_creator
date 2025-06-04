@@ -5,7 +5,7 @@ from particle_load.cython import get_layered_particles
 
 
 def populate_low_res_skins(
-    coords_x, coords_y, coords_z, masses, high_res_region, low_res_region, pl_params
+    coords_x, coords_y, coords_z, masses, high_res_region, low_res_region, params
 ):
     """
     Populate particles that live in the low-resolution skins.
@@ -26,12 +26,11 @@ def populate_low_res_skins(
         Stores information about the high-res region
     low_res_region : LowResolutionRegion object
         Stores information about the low-res region
-    pl_params : ParticleLoadParams object
-        Stores the parameters of the run
+    params : dict
     """
 
     # Generate outer particles of low res grid with growing skins.
-    if pl_params.is_slab:
+    if False:
         raise NotImplementedError
     #   if comm_rank == 0:
     #     print('Putting low res particles around slab of width %.2f Mpc/h' % \

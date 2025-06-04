@@ -30,9 +30,8 @@ def plot_skins(low_res_region):
 
     plt.figure(figsize=(5, 5))
 
-    mask = np.where((coords_z > -0.000001) & (coords_z < 0.000001))
+    mask = np.where((coords_z > -0.001) & (coords_z < 0.001))
     plt.scatter(coords_x[mask], coords_y[mask], c=masses[mask], marker=".")
     plt.tight_layout(pad=0.1)
     plt.savefig("skins.png")
     plt.close()
-    exit()

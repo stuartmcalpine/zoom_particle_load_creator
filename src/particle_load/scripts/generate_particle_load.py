@@ -10,7 +10,7 @@ from particle_load.make_param_files import (
     make_ic_param_files,
     make_swift_param_files,
 )
-from particle_load.params import ParticleLoadParams
+from particle_load import read_param_file
 from particle_load.populate_particles import populate_all_particles
 
 
@@ -37,11 +37,6 @@ def main():
         action="store_true",
     )
     parser.add_argument("-MPI", "--with_mpi", help="Run over MPI.", action="store_true")
-    parser.add_argument(
-        "--make_extra_plots",
-        help="Plot the high res region and low res skins as extra plots.",
-        action="store_true",
-    )
     args = parser.parse_args()
 
     # Init MPI.
@@ -49,17 +44,17 @@ def main():
 
     # Read the parameter file.
     if mympi.comm_rank == 0:
-        pl_params = ParticleLoadParams(args)
+        params = read_param_file(args)
     else:
-        pl_params = None
+        params = None
     if mympi.comm_size > 1:
-        pl_params = mympi.comm.bcast(pl_params, root=0)
+        params = mympi.comm.bcast(params, root=0)
 
     # Print stats.
-    def print_stats(high_res_region, low_res_region, pl_params, n_tot):
+    def print_stats(high_res_region, low_res_region, params, n_tot):
         mympi.print_section_header("Totals")
 
-        min_ranks = np.true_divide(n_tot, pl_params.max_particles_per_ic_file)
+        min_ranks = np.true_divide(n_tot, params["ic_gen"]["max_particles_per_ic_file"])
 
         mympi.message(f"Total number of particles {n_tot} ({n_tot**(1/3.):.1f} cubed)")
         if high_res_region is not None:
@@ -84,18 +79,16 @@ def main():
                 f"Num ranks needed for less than <max_particles_per_ic_file> = {min_ranks:.2f}"
             )
 
-    # Go...
-
     # Generate zoom-region particle load.
-    if pl_params.is_zoom:
+    if params["zoom"]["enable"]:
 
         # High resolution grid.
         mympi.print_section_header("High resolution grid")
-        high_res_region = HighResolutionRegion(pl_params)
+        high_res_region = HighResolutionRegion(params)
 
         # Low resolution boundary particles.
         mympi.print_section_header("Low resolution shells")
-        low_res_region = LowResolutionRegion(pl_params, high_res_region)
+        low_res_region = LowResolutionRegion(params, high_res_region)
 
         # Total number of particles in particle load.
         n_tot_local = high_res_region.n_tot + low_res_region.n_tot
@@ -107,37 +100,37 @@ def main():
         # Compute FFT size.
         mympi.print_section_header("FFT stats")
         if mympi.comm_rank == 0:
-            compute_fft_stats(np.max(high_res_region.size_mpch), n_tot, pl_params)
+            compute_fft_stats(np.max(high_res_region.size_mpch), n_tot, params)
 
         # Populate the grid with particles.
-        if pl_params.save_pl_data:
+        if params["cmd_args"]["save_pl_data"]:
             mympi.print_section_header("Populating and saving particles")
-            populate_all_particles(high_res_region, low_res_region, pl_params)
+            populate_all_particles(high_res_region, low_res_region, params)
 
     # Generate particle load for uniform volume.
-    else:
-        high_res_region = None
-        low_res_region = None
-    
-        # Total number of particles in particle load.
-        n_tot = pl_params.n_particles
-    
-        # Compute FFT size.
-        mympi.print_section_header("FFT stats")
-        if mympi.comm_rank == 0:
-            compute_fft_stats(None, n_tot, pl_params)
-   
+    # else:
+    #    high_res_region = None
+    #    low_res_region = None
+    #
+    #    # Total number of particles in particle load.
+    #    n_tot = pl_params.n_particles
+    #
+    #    # Compute FFT size.
+    #    mympi.print_section_header("FFT stats")
+    #    if mympi.comm_rank == 0:
+    #        compute_fft_stats(None, n_tot, pl_params)
+
     # Print total number of particles in particle load.
-    print_stats(high_res_region, low_res_region, pl_params, n_tot)
+    print_stats(high_res_region, low_res_region, params, n_tot)
 
     # Make the param files.
     if mympi.comm_rank == 0:
         mympi.print_section_header("Computed params")
-        param_dict = build_param_dict(pl_params, high_res_region)
+        build_param_dict(params, high_res_region)
 
         mympi.print_section_header("Parameter files")
-        if pl_params.make_ic_gen_param_files:
-            make_ic_param_files(param_dict)
+        if params["cmd_args"]["make_ic_gen_param_files"]:
+            make_ic_param_files(params)
 
-        if pl_params.make_swift_param_files:
-            make_swift_param_files(param_dict)
+        if params["cmd_args"]["make_swift_param_files"]:
+            make_swift_param_files(params)

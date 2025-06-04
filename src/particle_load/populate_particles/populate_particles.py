@@ -11,7 +11,7 @@ from .populate_low_res import populate_low_res_skins
 
 
 def populate_all_particles(
-    high_res_region, low_res_region, pl_params, final_tot_mass_eps=1e-6, com_eps=1e-6
+    high_res_region, low_res_region, params, final_tot_mass_eps=1e-6, com_eps=1e-6
 ):
     """
     Populate the particles into the high-res grid and the surrounding low-res skins.
@@ -24,8 +24,7 @@ def populate_all_particles(
         Stores information about the high-res region
     low_res_region : LowResolutionRegion object
         Stores information about the low-res region
-    pl_params : ParticleLoadParams object
-        Stores the parameters of the run
+    params : dict
     final_tot_mass_eps : float
         Summed particle masses tollerance
     com_eps : float
@@ -42,12 +41,12 @@ def populate_all_particles(
 
     # Load all the glass files we are going to need to populate the high res grid.
     glass = {}
-    if pl_params.grid_also_glass:
+    if params["zoom"]["grid_also_glass"]:
         for this_glass_no in high_res_region.cell_info["num_particles_per_cell"]:
             if this_glass_no not in glass.keys():
                 glass[this_glass_no] = load_glass_file(this_glass_no)
     else:
-        glass[pl_params.glass_num] = load_glass_file(pl_params.glass_num)
+        glass[params["glass_file"]["N"]] = load_glass_file(params["glass_file"]["N"])
 
     # Populate high resolution grid with particles.
     populate_high_res_grid(
@@ -56,13 +55,13 @@ def populate_all_particles(
         coords_y,
         coords_z,
         masses,
-        pl_params,
+        params,
         high_res_region,
     )
 
     # Populate low resolution skins.
     populate_low_res_skins(
-        coords_x, coords_y, coords_z, masses, high_res_region, low_res_region, pl_params
+        coords_x, coords_y, coords_z, masses, high_res_region, low_res_region, params
     )
 
     # Add up total mass (should add up to 1)
@@ -86,7 +85,9 @@ def populate_all_particles(
     assert com_z / final_tot_mass <= com_eps, "Bad COM z"
 
     # Wrap coords to chosen center.
-    wrap_coords = rescale(pl_params.coords, 0, pl_params.box_size, 0, 1.0)
+    wrap_coords = rescale(
+        params["parent"]["coords"], 0, params["parent"]["box_size"], 0, 1.0
+    )
     coords_x = np.mod(coords_x + wrap_coords[0] + 1.0, 1.0)
     coords_y = np.mod(coords_y + wrap_coords[1] + 1.0, 1.0)
     coords_z = np.mod(coords_z + wrap_coords[2] + 1.0, 1.0)
@@ -98,4 +99,4 @@ def populate_all_particles(
     assert np.all(masses > 0.0) and np.all(masses < 1.0), "Mass number error"
 
     # Save the particle load.
-    save_pl(coords_x, coords_y, coords_z, masses, pl_params)
+    save_pl(coords_x, coords_y, coords_z, masses, params)

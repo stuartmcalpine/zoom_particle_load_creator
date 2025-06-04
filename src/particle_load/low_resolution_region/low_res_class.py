@@ -7,7 +7,7 @@ from .plot import plot_skins
 
 
 class LowResolutionRegion:
-    def __init__(self, pl_params, high_res_region):
+    def __init__(self, params, high_res_region):
         """
         Class that stores the information about the low-res "skin" particles
         that surround the high-res inner grid.
@@ -18,8 +18,7 @@ class LowResolutionRegion:
 
         Parameters
         ----------
-        pl_params : ParticleLoadParams
-            Stores the parameters of the run
+        params : dict
         high_res_region : HighResolutionRegion object
             Object that stores information about the high-res grid
 
@@ -35,18 +34,18 @@ class LowResolutionRegion:
         """
 
         # Case where we have a slab high-res region.
-        if pl_params.is_slab:
-            self.compute_skins_slab()
+        # if pl_params.is_slab:
+        #    self.compute_skins_slab()
 
         # Case where we have a conventional cubic high-res region.
-        else:
-            self.compute_skins(pl_params, high_res_region)
+        # else:
+        self.compute_skins(params, high_res_region)
 
         # Report findings.
         self.print_nq_info()
 
         # Plot skin particles.
-        if pl_params.make_extra_plots:
+        if params["zoom"]["to_plot"]:
             plot_skins(self)
 
     def compute_skins_slab(self):
@@ -56,7 +55,7 @@ class LowResolutionRegion:
         # n_tot_lo = self.find_nq_slab(suggested_nq, slab_width)
         raise NotImplementedError
 
-    def compute_skins(self, pl_params, high_res_region):
+    def compute_skins(self, params, high_res_region):
         """
         Compute low-res skins surrounding a cubic high-res grid.
 
@@ -67,17 +66,16 @@ class LowResolutionRegion:
 
         Parameters
         ----------
-        pl_params : ParticleLoadParams
-            Stores the parameters of the run
+        params : dict
         high_res_region : HighResolutionRegion object
             Object that stores information about the high-res grid
         """
 
         # Ensure boundary particles in the first skin layer wont be less
         # massive than smallest particles in the high-res grid.
-        pl_params.max_nq = np.minimum(
+        params["zoom"]["max_nq"] = np.minimum(
             int(np.floor(high_res_region.n_tot_grid_part_equiv ** (1 / 3.0))),
-            pl_params._max_nq,
+            params["zoom"]["_max_nq"],
         )
 
         # Guess starting nq
@@ -86,16 +84,16 @@ class LowResolutionRegion:
         suggested_nq = np.clip(
             int(
                 high_res_region.n_tot_grid_part_equiv ** (1 / 3.0)
-                * pl_params.nq_mass_reduce_factor
+                * params["zoom"]["nq_mass_reduce_factor"]
             ),
-            pl_params.min_nq,
-            pl_params.max_nq,
+            params["zoom"]["min_nq"],
+            params["zoom"]["max_nq"],
         )
 
         if mympi.comm_rank == 0:
             print(
                 f"Starting: nq={suggested_nq}",
-                f"(min/max bounds={pl_params.min_nq}/{pl_params.max_nq})",
+                f"(min/max bounds={params['zoom']['min_nq']}/{params['zoom']['max_nq']})",
             )
 
         # Compute nq. We use the starting nq as a guess, but may need to refine
@@ -103,7 +101,7 @@ class LowResolutionRegion:
         # conservation of the box).
         self.side = np.true_divide(
             high_res_region.nL_cells[0],
-            pl_params.nL_glass_cells_whole_volume,
+            params["parent"]["N_glass_L"],
         )
         self.nq_info = find_nq(self.side, suggested_nq)
 

@@ -47,42 +47,41 @@ def _make_param_file_ics(ic_gen_dir, params):
         The paremeters to go into the template
     """
 
-    template = (
-        f"{_TEMPLATE_DIR}/ic_gen/params.inp"
-    )
+    template = f"{_TEMPLATE_DIR}/ic_gen/params.inp"
 
     # Is this a zoom simulation (zoom can't use 2LPT)?
-    if params["is_zoom"]:
-        if params["is_slab"]:
-            params["two_lpt"] = 1
-            params["multigrid"] = 0
+    if params["zoom"]["enable"]:
+        if False: #params["is_slab"]:
+            pass
+            #params["two_lpt"] = 1
+            #params["multigrid"] = 0
         else:
-            params["two_lpt"] = 0 if params["multigrid_ics"] else 1
-            params["multigrid"] = 1 if params["multigrid_ics"] else 0
+            params["ic_gen"]["two_lpt"] = 0 if params["ic_gen"]["multigrid_ics"] else 1
+            params["ic_gen"]["multigrid"] = 1 if params["ic_gen"]["multigrid_ics"] else 0
     else:
-        params["high_res_L"] = 0.0
-        params["high_res_n_eff"] = 0
-        params["two_lpt"] = 1
-        params["multigrid"] = 0
+        params["ic_gen"]["high_res_L"] = 0.0
+        params["ic_gen"]["high_res_n_eff"] = 0
+        params["ic_gen"]["two_lpt"] = 1
+        params["ic_gen"]["multigrid"] = 0
 
     # Use peano hilbert indexing?
-    params["use_ph"] = 2 if params["use_ph_ids"] else 1
+    params["ic_gen"]["use_ph"] = 2 if params["ic_gen"]["use_ph_ids"] else 1
 
     # Cube of neff
-    params["high_res_n_eff_cube"] = round(params["high_res_n_eff"] ** (1.0 / 3))
+    params["ic_gen"]["high_res_n_eff_cube"] = round(params["ic_gen"]["high_res_n_eff"] ** (1.0 / 3))
 
     # Constraint files
     s = "#-------------- List constraint phase descriptors and (newline) file path, and levels to use"
-    for i in range(params["num_constraint_files"]):
-        s += f"\n{params[f'constraint_phase_descriptor_{i+1}']}"
-        s += f"\n'{params[f'constraint_phase_descriptor_path_{i+1}']}'"
-        s += f"\n{params[f'constraint_phase_descriptor_levels_{i+1}']}"
-    params["constraint_files"] = s
+    for i in range(params["ic_gen"]["num_constraint_files"]):
+        s += f"\n{params['ic_gen'][f'constraint_phase_descriptor_{i+1}']}"
+        s += f"\n'{params['ic_gen'][f'constraint_phase_descriptor_path_{i+1}']}'"
+        s += f"\n{params['ic_gen'][f'constraint_phase_descriptor_levels_{i+1}']}"
+    params["ic_gen"]["constraint_files"] = s
 
     # Replace template values.
     with open(template, "r") as f:
         src = Template(f.read())
-        result = src.substitute(params)
+        result = src.substitute(params["ic_gen"])
 
     # Write new param file.
     with open("%s/params.inp" % (ic_gen_dir), "w") as f:
@@ -100,7 +99,7 @@ def make_ic_param_files(params):
     """
 
     # Make main ic_gen folder if it doesn't exist.
-    ic_gen_dir = os.path.join(params["save_dir"], "ic_gen")
+    ic_gen_dir = os.path.join(params["output"]["path"], "ic_gen")
     if not os.path.exists(ic_gen_dir):
         os.makedirs(ic_gen_dir)
 
@@ -110,7 +109,7 @@ def make_ic_param_files(params):
         os.makedirs(ic_gen_output_dir)
 
     # Make submit files.
-    _make_submit_file_ics(ic_gen_dir, params)
+    _make_submit_file_ics(ic_gen_dir, params["ic_gen"])
     print("Saved ic_gen submit file")
 
     # Make parameter files.

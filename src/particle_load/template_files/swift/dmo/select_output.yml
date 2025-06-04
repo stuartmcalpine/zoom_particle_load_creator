@@ -1,0 +1,4 @@
+Default:
+  # Particle Type DM
+  Softenings_DM: off
+  Potentials_DM: off

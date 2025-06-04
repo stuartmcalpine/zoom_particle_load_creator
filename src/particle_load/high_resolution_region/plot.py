@@ -4,13 +4,8 @@ import numpy as np
 
 import particle_load.mympi as mympi
 
-# Set up Matplotlib
-mpl.rcParams["text.usetex"] = True
-mpl.rcParams["font.family"] = "serif"
-mpl.rcParams["font.serif"] = "Palatino"
 
-
-def plot_high_res_region(pl_params, offsets, cell_types, show_mask=False):
+def plot_high_res_region(params, offsets, cell_types, show_mask=False):
     """
     Have a quick look at how the high resolution region has been constructed.
 
@@ -20,8 +15,7 @@ def plot_high_res_region(pl_params, offsets, cell_types, show_mask=False):
 
     Parameters
     ----------
-    pl_parms : ParticleLoadParams
-        Stores the parameters of the run
+    params : dict
     offsets : ndarray
         Positions of high-res cells
     cell_types : ndarray
@@ -38,13 +32,14 @@ def plot_high_res_region(pl_params, offsets, cell_types, show_mask=False):
     # Want one close to the middle of high res region.
     idx = np.abs(offsets[:, 2]).argmin()
 
+    L_glass = params["glass_file"]["L_mpch"]
+    coords = params["zoom"]["mask_coordinates"]
+
     # Glass cells.
     mask = np.where((offsets[:, 2] == offsets[:, 2][idx]) & (cell_types == 0))
     plt.scatter(
-        offsets[:, 0][mask] * pl_params.size_glass_cell_mpch
-        + pl_params.size_glass_cell_mpch / 2.0,
-        offsets[:, 1][mask] * pl_params.size_glass_cell_mpch
-        + pl_params.size_glass_cell_mpch / 2.0,
+        offsets[:, 0][mask] * L_glass + L_glass / 2.0,
+        offsets[:, 1][mask] * L_glass + L_glass / 2.0,
         c=cell_types[mask],
         marker="x",
     )
@@ -52,23 +47,18 @@ def plot_high_res_region(pl_params, offsets, cell_types, show_mask=False):
     # Non-glass cells.
     mask = np.where((offsets[:, 2] == offsets[:, 2][idx]) & (cell_types > 0))
     plt.scatter(
-        offsets[:, 0][mask] * pl_params.size_glass_cell_mpch
-        + pl_params.size_glass_cell_mpch / 2.0,
-        offsets[:, 1][mask] * pl_params.size_glass_cell_mpch
-        + pl_params.size_glass_cell_mpch / 2.0,
+        offsets[:, 0][mask] * L_glass + L_glass / 2.0,
+        offsets[:, 1][mask] * L_glass + L_glass / 2.0,
         c=cell_types[mask],
     )
 
     # The original mask coordinates.
     if show_mask:
-        idx2 = np.abs(pl_params.high_res_region_mask.coords[:, 2]).argmin()
-        mask = np.where(
-            pl_params.high_res_region_mask.coords[:, 2]
-            == pl_params.high_res_region_mask.coords[:, 2][idx2]
-        )
+        idx2 = np.abs(coords[:, 2]).argmin()
+        mask = np.where(coords[:, 2] == coords[:, 2][idx2])
         plt.scatter(
-            pl_params.high_res_region_mask.coords[:, 0][mask],
-            pl_params.high_res_region_mask.coords[:, 1][mask],
+            coords[:, 0][mask],
+            coords[:, 1][mask],
             marker=".",
             alpha=0.5,
         )
@@ -76,8 +66,8 @@ def plot_high_res_region(pl_params, offsets, cell_types, show_mask=False):
     # Finish plot and save.
     plt.gca().axis("equal")
     fname = f"high_res_region_{mympi.comm_rank}.png"
-    plt.xlabel(f"$x$ [$h^{{-1}}$ Mpc]")
-    plt.ylabel(f"$y$ [$h^{{-1}}$ Mpc]")
+    plt.xlabel(r"$x$ [Mpc/h]")
+    plt.ylabel(r"$y$ [Mpc/h]")
     plt.tight_layout(pad=0.1)
     plt.savefig(fname)
     print(f"[Rank {mympi.comm_rank}] saved {fname}.")

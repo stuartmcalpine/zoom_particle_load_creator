@@ -1,24 +1,18 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks=$n_nodes_swift
+#SBATCH --ntasks=$n_nodes
 #SBATCH -J Swift
 #SBATCH -o out_files/%x.%J.swift.out
 #SBATCH -e out_files/%x.%J.swift.err
-#SBATCH -p cosma7
+#SBATCH -p cosma7-rp
 #SBATCH -A dp004
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=28
-#SBATCH --time=$num_hours_swift:00:00
+#SBATCH --time=$n_hours:00:00
 
-module purge
-module load intel_comp/2018
-module load intel_mpi/2018
-module load parallel_hdf5/1.10.3
-module load fftw/3.3.8cosma7
-module load gsl/2.5
-module load parmetis/4.0.3-64bit
+load_swift
 
-mpirun -np $$SLURM_NTASKS $swift_exec --fof -v 1 --pin --cosmology --self-gravity --threads=$$SLURM_CPUS_PER_TASK params.yml
+mpirun -np $$SLURM_NTASKS --bind-to core --map-by slot:PE=$$SLURM_CPUS_PER_TASK $exec --fof -v 1 --pin --cosmology --self-gravity --threads=$$SLURM_CPUS_PER_TASK params.yml
 
 echo "Job done, info follows..."
 sacct -j $$SLURM_JOBID --format=JobID,JobName,Partition,AveRSS,MaxRSS,AveVMSize,MaxVMSize,Elapsed,ExitCode

@@ -1,0 +1,29 @@
+[parent]
+box_size = 681.0
+n_particles = 134217728 # 512**3
+
+[glass_file]
+N = 512
+
+[cosmology]
+Omega0 = 0.306
+OmegaCDM = 0.2574
+OmegaLambda = 0.694
+OmegaBaryon = 0.0486
+HubbleParam = 0.681
+Sigma8 = 0.807
+
+[output]
+path = "test_2mpp"
+
+[ic_gen]
+panphasian_descriptor = "[Panph1,L16,(19984,44889,45183),S1,CH1807388262,2MPP_INNER]"
+linear_ps = "/path/to/extended_planck_linear_powspec"
+
+[softening]
+rule = "flamingo"
+
+[zoom]
+enable = true
+mask = "/cosma7/data/dp004/rttw52/particle_load/runs/test/mask.hdf5"
+glass_buffer_cells = 20

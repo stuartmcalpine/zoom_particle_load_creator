@@ -46,7 +46,7 @@ def populate_high_res_grid(
     coords_y,
     coords_z,
     masses,
-    pl_params,
+    params,
     high_res_region,
     total_mass_eps=1e-6,
     com_eps=1e-6,
@@ -78,8 +78,7 @@ def populate_high_res_grid(
         z-coordinate array to be populated
     masses : ndarray float[high_res.ntot,]
         Masses array to be populated
-    pl_params : ParticleLoadParams object
-        Stores the parameters of the run
+    params : dict
     high_res_region : HighResolutionRegion object
         Stores information about the high-res region
     total_mass_eps : float
@@ -105,9 +104,9 @@ def populate_high_res_grid(
             get_populated_grid(
                 high_res_region.offsets[mask],
                 np.c_[
-                    glass[pl_params.glass_num]["x"],
-                    glass[pl_params.glass_num]["y"],
-                    glass[pl_params.glass_num]["z"],
+                    glass[params["glass_file"]["N"]]["x"],
+                    glass[params["glass_file"]["N"]]["y"],
+                    glass[params["glass_file"]["N"]]["z"],
                 ],
                 coords_x,
                 coords_y,
@@ -117,7 +116,7 @@ def populate_high_res_grid(
 
         # Grid particle coordinates.
         else:
-            if pl_params.grid_also_glass:
+            if params["zoom"]["grid_also_glass"]:
                 get_populated_grid(
                     high_res_region.offsets[mask],
                     np.c_[
@@ -170,7 +169,7 @@ def populate_high_res_grid(
             -max_boxsize / 2.0,
             max_boxsize / 2.0,
         )
-        / pl_params.box_size
+        / params["parent"]["box_size"]
     )  # -0.5 > +0.5.
     coords_y[: high_res_region.n_tot] = (
         rescale(
@@ -180,7 +179,7 @@ def populate_high_res_grid(
             -max_boxsize / 2.0,
             max_boxsize / 2.0,
         )
-        / pl_params.box_size
+        / params["parent"]["box_size"]
     )  # -0.5 > +0.5.
     coords_z[: high_res_region.n_tot] = (
         rescale(
@@ -190,7 +189,7 @@ def populate_high_res_grid(
             -max_boxsize / 2.0,
             max_boxsize / 2.0,
         )
-        / pl_params.box_size
+        / params["parent"]["box_size"]
     )  # -0.5 > +0.5.
 
     # Check coords.
@@ -209,10 +208,16 @@ def populate_high_res_grid(
     if mympi.comm_size > 1:
         tot_hr_mass = mympi.comm.allreduce(tot_hr_mass)
     assert (
-        np.abs(tot_hr_mass - (high_res_region.volume_mpch3 / pl_params.box_size**3.0))
+        np.abs(
+            tot_hr_mass
+            - (high_res_region.volume_mpch3 / params["parent"]["box_size"] ** 3.0)
+        )
         <= total_mass_eps
     ), "Error high res masses %.8f" % (
-        np.abs(tot_hr_mass - (high_res_region.volume_mpch3 / pl_params.box_size**3.0))
+        np.abs(
+            tot_hr_mass
+            - (high_res_region.volume_mpch3 / params["parent"]["box_size"] ** 3.0)
+        )
     )
 
     # Check centre of mass.

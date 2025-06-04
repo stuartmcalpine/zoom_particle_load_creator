@@ -1,12 +1,12 @@
 # Define the system of units to use internally. 
 InternalUnitSystem:
-  UnitMass_in_cgs:     1.98841e43    # 10^10 M_sun
-  UnitLength_in_cgs:   3.08567758e24 # 1 Mpc
-  UnitVelocity_in_cgs: 1e5           # 1 km/s
+  UnitMass_in_cgs:     1.98841e43    # 10^10 M_sun in grams
+  UnitLength_in_cgs:   3.08567758e24 # Mpc in centimeters
+  UnitVelocity_in_cgs: 1e5           # km/s in centimeters per second
   UnitCurrent_in_cgs:  1             # Amperes
   UnitTemp_in_cgs:     1             # Kelvin
 
-# Planck-13 cosmology
+# Cosmological parameters
 Cosmology:
   h:              $HubbleParam      # Reduced Hubble constant
   a_begin:        $starting_a       # Initial scale-factor of the simulation
@@ -14,55 +14,82 @@ Cosmology:
   Omega_cdm:      $OmegaCDM         # Cold Dark Matter density parameter
   Omega_lambda:   $OmegaLambda      # Dark-energy density parameter
   Omega_b:        $OmegaBaryon      # Baryon density parameter
-  
+
 # Parameters governing the time integration
 TimeIntegration:
-  dt_min:     1e-10 
-  dt_max:     1e-2
-
+  dt_min:     1e-10 # The minimal time-step size of the simulation (in internal units).
+  dt_max:     1e-2  # The maximal time-step size of the simulation (in internal units).
+  
 Scheduler:
   max_top_level_cells: 32
-  cell_split_size:     200
+  tasks_per_cell: 16
+  cell_split_size: 200
 
 # Parameters governing the snapshots
 Snapshots:
   basename:            snap
-  output_list_on:      1
-  output_list:         snapshot_times.txt
-  subdir:              snapshots 
+  output_list_on: 1
+  output_list: snap_times.txt
+  invoke_fof: 1
+  compression: 4
+  select_output_on:    1
+  select_output:       select_output.yml
+  distributed: 1
 
 # Parameters governing the conserved quantities statistics
 Statistics:
   delta_time:           1.01
   scale_factor_first:   0.03126
- 
-# Restart files.    
+
 Restarts:
-  onexit:             1
-  delta_hours:        4.0
-  stop_steps:         25
-  max_run_time:       71.5       # In hours
+  onexit:       1
+  stop_steps:   25                   # Check for the presence of a 'stop' file every 25 steps
+  delta_hours:  4.0                  # Write a restart file every 4 hours.
+  max_run_time: 71.5                 # Job runtime before stopping: Three days minus fergie time
 
 # Parameters for the self-gravity scheme
 Gravity:
-  eta:                              0.025         
-  comoving_DM_softening:            $eps_dm
+  eta:                      0.025     # Constant dimensionless multiplier for time integration.
+  MAC:                      adaptive
+  epsilon_fmm:              0.0025
+  use_tree_below_softening:    0
+  theta_cr:                 0.7       # Opening angle (Multipole acceptance criterion)
+  mesh_side_length:         512
+  comoving_DM_softening:      $eps_dm # Comoving DM softening length (in internal units).
   softening_ratio_background:       $softening_ratio_background
-  max_physical_DM_softening:        $eps_dm_physical
-  mesh_side_length:                 512
-  MAC:                              adaptive
-  theta_cr:                         0.7
-  epsilon_fmm:                      0.001
+  max_physical_DM_softening:    $eps_dm_physical  # Max physical DM softening length (in internal units).
+  distributed_mesh:            1
 
 # Parameters related to the initial conditions
 InitialConditions:
-  file_name:                   ics.hdf5
-  periodic:                    1
-  cleanup_h_factors:           1    
-  cleanup_velocity_factors:    1
+  file_name:  ../ic_gen/ICs/ics.hdf5
+  periodic:   1
+  cleanup_h_factors: 1               # Remove the h-factors inherited from Gadget
+  cleanup_velocity_factors: 1        # Remove the sqrt(a) factor in the velocities inherited from Gadget
 
 FOF:
-  basename:                     FOF
-  min_group_size:               32
-  linking_length_ratio:         0.2
-  seed_black_holes_enabled:     0
+  basename: FOF
+  min_group_size: 32
+  linking_length_ratio:            0.2
+  seed_black_holes_enabled:        0
+  linking_types:                   [0, 1, 0, 0, 0, 0, 0]
+  attaching_types:                 [1, 0, 0, 0, 1, 1, 0]
+
+LightconeCommon:
+  subdir:               lightcones   # All lightcone output is written to this directory
+  buffer_chunk_size:    100000       # Particles and map updates are buffered in a linked list of chunks of this size
+  z_range_for_DM:         [0.0, 0.05]
+
+  max_particles_buffered: 10000000  # Output particles if buffer size reaches this value
+  max_updates_buffered:   10000000  # Flush map updates if buffer size reaches this value
+  hdf5_chunk_size:        32768
+
+  radius_file:                 shell_redshifts.txt
+  nside: 64
+  map_names_file:              map_types.txt
+
+Lightcone0:
+  enabled: 0                             # Enable this lightcone
+  basename: lightcone0                                 # Base name of this lighcone's output files
+  observer_position: [249.99999999999997,  249.99999999999997,  249.99999999999997]          # Location of the observer in this lightcone
+
